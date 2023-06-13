@@ -8,17 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using System.Diagnostics;
 
 namespace Mariokart
 {
     public partial class Form1 : Form
     {
         List <Point> trackPoints = new List <Point> ();
-
-        List <Point> startLinePoints = new List <Point> ();
-
         List <PointF> roadPoints = new List<PointF> ();
-        //PointF[] road = new PointF[];
 
         PointF[] startLine = new PointF[4]; 
 
@@ -28,7 +25,6 @@ namespace Mariokart
         Rectangle pipe = new Rectangle();
 
         int counter = 0;
-        int counter2 = 0;
 
         Font drawFont = new Font("Arial", 50, FontStyle.Bold);
         SolidBrush redBrush = new SolidBrush(Color.Red);
@@ -46,17 +42,17 @@ namespace Mariokart
         bool sDown = false;
         bool dDown = false;
 
-        int playerWidth = 112;
-        int playerHeight = 120;
-        int horizonHeight = 753/6;
+        const int playerWidth = 112;
+        const int playerHeight = 120;
+        const int horizonHeight = 753/6;
 
         int driveSpeed = 0;
-        int driveAcceleration = 1;
-        int maxAcceleration = 20;
+        const int driveAcceleration = 1;
+        const int maxAcceleration = 20;
 
         float turnDirection = 0;
-        float turningAcceleration = 0.5f;
-        int maxTurnSpeed = 12;
+        const float turningAcceleration = 0.5f;
+        const int maxTurnSpeed = 12;
 
         bool startLineActive = true;
         bool turnRight = false;
@@ -99,6 +95,8 @@ namespace Mariokart
         Image[] playerImage = new Image[13];
 
         string characterHovered;
+
+        Stopwatch playerStopwatch = new Stopwatch();
 
         public Form1()
         {
@@ -356,68 +354,11 @@ namespace Mariokart
             if (wDown == true || driveSpeed > 0)
             {
                 MoveForward();
-
             }
             if (sDown == true)
             {
                 MoveBackwards();
             }
-            if (aDown == true && driveSpeed > 0)
-            {
-                MoveSideways(turningAcceleration);
-            }
-            if (dDown == true && driveSpeed > 0)
-            {
-                MoveSideways(-turningAcceleration);
-            }
-            if (distanceDriven == 150)
-            {
-                turnRight = true;
-            }
-            else if (distanceDriven == 300)
-            {
-                straightenOutFromRight = true;
-                turnRight = false;
-            }
-            else if (distanceDriven == 450)
-            {
-                turnLeft = true;
-                driftAmount = -0.1f;
-                straightenOutFromRight = false;
-            }
-            else if (distanceDriven == 600)
-            {
-                straightenOutFromLeft = true;
-                turnLeft = false;
-            }
-            else if (distanceDriven == 750)
-            {
-                turnLeft = true;
-                driftAmount = -0.1f;
-                straightenOutFromLeft = false;
-            }
-            else if (distanceDriven == 900)
-            {
-                straightenOutFromLeft = true;
-                turnLeft = false;
-            }
-            else if (distanceDriven == 950)
-            {
-                turnRight = true;
-                driftAmount = 0.1f;
-                straightenOutFromLeft = false;
-            }
-            else if (distanceDriven == 1200)
-            {
-                straightenOutFromRight = true;
-                turnRight = false;
-            }
-            else if (distanceDriven == 1500)
-            {
-                distanceDriven = 0;
-                counter++;
-            }
-
             if (wDown == true && aDown == dDown)
             {
                 if (turnDirection > 0)
@@ -429,10 +370,106 @@ namespace Mariokart
                     turnDirection += turningAcceleration;
                 }
             }
+            else
+            {
+                if (aDown == true && driveSpeed > 0)
+                {
+                    MoveSideways(turningAcceleration);
+                }
+                if (dDown == true && driveSpeed > 0)
+                {
+                    MoveSideways(-turningAcceleration);
+                }
+            }
 
+            //track sequence
+            switch (distanceDriven)
+            {
+                case 150:
+                    turnRight = true;
+                    break;
+                case 300:
+                    straightenOutFromRight = true;
+                    turnRight = false;
+                    break;
+                case 450:
+                    turnLeft = true;
+                    driftAmount = -0.1f;
+                    straightenOutFromRight = false;
+                    break;
+                case 600:
+                    straightenOutFromLeft = true;
+                    turnLeft = false;
+                    break;
+                case 750:
+                    turnLeft = true;
+                    driftAmount = -0.1f;
+                    straightenOutFromLeft = false;
+                    break;
+                case 900:
+                    straightenOutFromLeft = true;
+                    turnLeft = false;
+                    break;
+                case 1050:
+                    turnRight = true;
+                    driftAmount = 0.1f;
+                    straightenOutFromLeft = false;
+                    break;
+                case 1200:
+                    straightenOutFromRight = true;
+                    turnRight = false;
+                    break;
+                case 1350:
+                    turnLeft = true;
+                    driftAmount = -0.1f;
+                    straightenOutFromLeft = false;
+                    break;
+                case 1500:
+                    straightenOutFromLeft = true;
+                    turnLeft = false;
+                    break;
+                case 1650:
+                    turnRight = true;
+                    driftAmount = 0.1f;
+                    straightenOutFromLeft = false;
+                    break;
+                case 1800:
+                    straightenOutFromRight = true;
+                    turnRight = false;
+                    break;
+                case 1950:
+                    turnRight = true;
+                    driftAmount = 0.1f;
+                    straightenOutFromLeft = false;
+                    break;
+                case 2100:
+                    straightenOutFromRight = true;
+                    turnRight = false;
+                    break;
+                case 2250:
+                    distanceDriven = 0;
+                    MakeStartLine();
+                    while (startLine[0].Y > horizonHeight)
+                    {
+                        startLine[0].Y-=driveSpeed * 1.5f;
+                        startLine[1].Y-=driveSpeed;
+                        startLine[2].Y-=driveSpeed;
+                        startLine[3].Y-=driveSpeed * 1.5f;
+
+                        startLine[0].X +=(driveSpeed * 1.5f) * perspectiveAngle;
+                        startLine[1].X += driveSpeed * perspectiveAngle;
+                        startLine[2].X-=driveSpeed * perspectiveAngle;
+                        startLine[3].X-=(driveSpeed * 1.5f) * perspectiveAngle;
+                    }
+                    startLineActive = true;
+                    counter++;
+                    break;
+                default: break;
+            }
+            
             if (counter == 3)
             {
-                state = "main menu";
+                state = "leaderboard";
                 gameTimer.Enabled = false;
             }
 
@@ -449,12 +486,6 @@ namespace Mariokart
             else if (state == "play game")
             {
                 e.Graphics.FillRectangle(greenBrush, 0, 0, Width, Height);
-
-                for (int i = 0; i < startLinePoints.Count; i++)
-                {
-                    e.Graphics.DrawLine(blackPen, startLinePoints[i], startLinePoints[i+1]);
-                    i++;
-                }
                 
                 PointF[] roadArray = new PointF[roadPoints.Count];
                 for (int i = 0; i < roadPoints.Count; i++)
@@ -463,7 +494,10 @@ namespace Mariokart
                 }
                 e.Graphics.FillPolygon(grayBrush, roadArray);
 
-                e.Graphics.FillPolygon(blackBrush, startLine);
+                if(startLineActive == true)
+                {
+                    e.Graphics.FillPolygon(blackBrush, startLine);
+                }
 
                 e.Graphics.FillRectangle(blueBrush, 0, 0, Width, horizonHeight);
 
@@ -499,6 +533,10 @@ namespace Mariokart
                 koopaButton.Image = koopaImages[spinningKoopaImage];
                 peachButton.Image = peachImages[spinningPeachImage];
             }
+            else if (state == "leaderboard")
+            {
+
+            }
         }
 
         public void MakeTrack()
@@ -525,24 +563,6 @@ namespace Mariokart
                 x += perspectiveAngle;
             }
             originalTrackPosition = roadPoints[(roadPoints.Count-1)/2].X - roadPoints[0].X;
-
-
-            startLine[0] = new PointF(roadPoints[300].X, roadPoints[300].Y);
-            startLine[1] = new PointF(roadPoints[400].X, roadPoints[400].Y);
-            startLine[2] = new PointF(roadPoints[roadPoints.Count - 400].X, roadPoints[roadPoints.Count - 400].Y);
-            startLine[3] = new PointF(roadPoints[roadPoints.Count - 300].X, roadPoints[roadPoints.Count - 300].Y);
-
-            /*
-            //make start line
-            for (int i = horizonHeight * 2; i < horizonHeight * 3; i++)
-            {
-                //make points for each line making the track
-                Point point = new Point(-i /2 + (Width/6)*3/2, i + horizonHeight);
-                startLinePoints.Add(point);
-
-                point = new Point(i/2 +(Width / 6) * 9/2, i + horizonHeight);
-                startLinePoints.Add(point);
-            }*/
         }
 
         public void MoveForward()
@@ -569,6 +589,11 @@ namespace Mariokart
                 startLine[1].X-= driveSpeed * perspectiveAngle;
                 startLine[2].X+=driveSpeed * perspectiveAngle;
                 startLine[3].X+=(driveSpeed * 1.5f) * perspectiveAngle;
+
+                if (startLine[1].Y > this.Height)
+                {
+                    startLineActive = false;
+                }
             }
 
             if (turnRight == true)
@@ -725,16 +750,6 @@ namespace Mariokart
                 }
 
             }
-
-            /*if (pipeActive == true)
-            {
-                pipeSize+=5;
-
-                pipe.X -= driveSpeed * 2;
-                pipe.Y += driveSpeed;
-                pipe.Width = pipeSize;
-                pipe.Height = pipeSize;
-            }*/
         }
 
         public void MoveSideways(float turningAcceleration)
@@ -800,28 +815,7 @@ namespace Mariokart
                 playerImage[i] = marioImages[i];
             }
 
-            gameTimer.Enabled = true;
-
-            state = "play game";
-
-            marioButton.Visible = false;
-            bowserButton.Visible = false;
-            peachButton.Visible = false;
-            koopaButton.Visible = false;
-            luigiButton.Visible = false;
-            yoshiButton.Visible = false;
-            donkeyButton.Visible = false;
-            toadButton.Visible = false;
-            marioButton.Enabled = false;
-            bowserButton.Enabled = false;
-            peachButton.Enabled = false;
-            luigiButton.Enabled = false;
-            koopaButton.Enabled = false;
-            yoshiButton.Enabled = false;
-            donkeyButton.Enabled = false;
-            toadButton.Enabled = false;
-
-            MakeTrack();
+            StartTheGame();
         }
 
         private void bowserButton_Click(object sender, EventArgs e)
@@ -831,28 +825,7 @@ namespace Mariokart
                 playerImage[i] = bowserImages[i];
             }
 
-            state = "play game";
-
-            marioButton.Visible = false;
-            bowserButton.Visible = false;
-            peachButton.Visible = false;
-            koopaButton.Visible = false;
-            luigiButton.Visible = false;
-            yoshiButton.Visible = false;   
-            donkeyButton.Visible = false;
-            toadButton.Visible = false;
-            marioButton.Enabled = false;
-            bowserButton.Enabled = false;
-            peachButton.Enabled = false;
-            luigiButton.Enabled = false;
-            koopaButton.Enabled = false;
-            yoshiButton.Enabled = false;
-            donkeyButton.Enabled = false;
-            toadButton.Enabled = false;
-
-
-            gameTimer.Enabled = true;
-            MakeTrack();
+            StartTheGame();
         }
 
         private void peachButton_Click(object sender, EventArgs e)
@@ -862,28 +835,7 @@ namespace Mariokart
                 playerImage[i] = peachImages[i];
             }
 
-            gameTimer.Enabled = true;
-
-            state = "play game";
-
-            marioButton.Visible = false;
-            bowserButton.Visible = false;
-            peachButton.Visible = false;
-            koopaButton.Visible = false;
-            luigiButton.Visible = false;
-            yoshiButton.Visible = false;
-            donkeyButton.Visible = false;
-            toadButton.Visible = false;
-            marioButton.Enabled = false;
-            bowserButton.Enabled = false;
-            peachButton.Enabled = false;
-            luigiButton.Enabled = false;
-            koopaButton.Enabled = false;
-            yoshiButton.Enabled = false;
-            donkeyButton.Enabled = false;
-            toadButton.Enabled = false;
-
-            MakeTrack();
+            StartTheGame();
         }
 
         private void koopaButton_Click(object sender, EventArgs e)
@@ -893,28 +845,7 @@ namespace Mariokart
                 playerImage[i] = koopaImages[i];
             }
 
-            state = "play game";
-
-            marioButton.Visible = false;
-            bowserButton.Visible = false;
-            peachButton.Visible = false;
-            koopaButton.Visible = false;
-            luigiButton.Visible = false;
-            yoshiButton.Visible = false;
-            donkeyButton.Visible = false;
-            toadButton.Visible = false;
-            marioButton.Enabled = false;
-            bowserButton.Enabled = false;
-            peachButton.Enabled = false;
-            luigiButton.Enabled = false;
-            koopaButton.Enabled = false;
-            yoshiButton.Enabled = false;
-            donkeyButton.Enabled = false;
-            toadButton.Enabled = false;
-
-
-            gameTimer.Enabled = true;
-            MakeTrack();
+            StartTheGame();
         }
 
         private void luigiButton_Click(object sender, EventArgs e)
@@ -924,28 +855,7 @@ namespace Mariokart
                 playerImage[i] = luigiImages[i];
             }
 
-            gameTimer.Enabled = true;
-
-            state = "play game";
-
-            marioButton.Visible = false;
-            bowserButton.Visible = false;
-            peachButton.Visible = false;
-            koopaButton.Visible = false;
-            luigiButton.Visible = false;
-            yoshiButton.Visible = false;
-            donkeyButton.Visible = false;
-            toadButton.Visible = false;
-            marioButton.Enabled = false;
-            bowserButton.Enabled = false;
-            peachButton.Enabled = false;
-            luigiButton.Enabled = false;
-            koopaButton.Enabled = false;
-            yoshiButton.Enabled = false;
-            donkeyButton.Enabled = false;
-            toadButton.Enabled = false;
-
-            MakeTrack();
+            StartTheGame();
         }
 
         private void yoshiButton_Click(object sender, EventArgs e)
@@ -955,28 +865,7 @@ namespace Mariokart
                 playerImage[i] = yoshiImages[i];
             }
 
-            gameTimer.Enabled = true;
-
-            state = "play game";
-
-            marioButton.Visible = false;
-            bowserButton.Visible = false;
-            peachButton.Visible = false;
-            koopaButton.Visible = false;
-            luigiButton.Visible = false;
-            yoshiButton.Visible = false;
-            donkeyButton.Visible = false;
-            toadButton.Visible = false;
-            marioButton.Enabled = false;
-            bowserButton.Enabled = false;
-            peachButton.Enabled = false;
-            luigiButton.Enabled = false;
-            koopaButton.Enabled = false;
-            yoshiButton.Enabled = false;
-            donkeyButton.Enabled = false;
-            toadButton.Enabled = false;
-
-            MakeTrack();
+            StartTheGame();
         }
 
         private void donkeyButton_Click(object sender, EventArgs e)
@@ -986,28 +875,7 @@ namespace Mariokart
                 playerImage[i] = donkeyImages[i];
             }
 
-            state = "play game";
-
-            marioButton.Visible = false;
-            bowserButton.Visible = false;
-            peachButton.Visible = false;
-            koopaButton.Visible = false;
-            luigiButton.Visible = false;
-            yoshiButton.Visible = false;
-            donkeyButton.Visible = false;
-            toadButton.Visible = false;
-            marioButton.Enabled = false;
-            bowserButton.Enabled = false;
-            peachButton.Enabled = false;
-            luigiButton.Enabled = false;
-            koopaButton.Enabled = false;
-            yoshiButton.Enabled = false;
-            donkeyButton.Enabled = false;
-            toadButton.Enabled = false;
-
-
-            gameTimer.Enabled = true;
-            MakeTrack();
+            StartTheGame();
         }
 
         private void toadButton_Click(object sender, EventArgs e)
@@ -1017,28 +885,7 @@ namespace Mariokart
                 playerImage[i] = toadImages[i];
             }
 
-            gameTimer.Enabled = true;
-
-            state = "play game";
-
-            marioButton.Visible = false;
-            bowserButton.Visible = false;
-            peachButton.Visible = false;
-            koopaButton.Visible = false;
-            luigiButton.Visible = false;
-            yoshiButton.Visible = false;
-            donkeyButton.Visible = false;
-            toadButton.Visible = false;
-            marioButton.Enabled = false;
-            bowserButton.Enabled = false;
-            peachButton.Enabled = false;
-            luigiButton.Enabled = false;
-            koopaButton.Enabled = false;
-            yoshiButton.Enabled = false;
-            donkeyButton.Enabled = false;
-            toadButton.Enabled = false;
-
-            MakeTrack();
+            StartTheGame();
         }
 
         private void toadButton_MouseHover(object sender, EventArgs e)
@@ -1241,5 +1088,57 @@ namespace Mariokart
             }
         }
 
+        public void StartTheGame()
+        {
+            gameTimer.Enabled = true;
+
+            trackPoints.Clear();
+            roadPoints.Clear();
+
+            counter = 0;
+
+            state = "play game";
+
+            driveSpeed = 0;
+            turnDirection = 0;
+            
+            startLineActive = true;
+            turnRight = false;
+            straightenOutFromRight = false;
+            turnLeft = false;
+            straightenOutFromLeft = false;
+
+            distanceDriven = 0;
+
+            perspectiveAngle = 0.5f;
+
+            marioButton.Visible = false;
+            bowserButton.Visible = false;
+            peachButton.Visible = false;
+            koopaButton.Visible = false;
+            luigiButton.Visible = false;
+            yoshiButton.Visible = false;
+            donkeyButton.Visible = false;
+            toadButton.Visible = false;
+            marioButton.Enabled = false;
+            bowserButton.Enabled = false;
+            peachButton.Enabled = false;
+            luigiButton.Enabled = false;
+            koopaButton.Enabled = false;
+            yoshiButton.Enabled = false;
+            donkeyButton.Enabled = false;
+            toadButton.Enabled = false;
+
+            MakeTrack();
+            MakeStartLine();
+        }
+        
+        public void MakeStartLine()
+        {
+            startLine[0] = new PointF(roadPoints[300].X, roadPoints[300].Y);
+            startLine[1] = new PointF(roadPoints[400].X, roadPoints[400].Y);
+            startLine[2] = new PointF(roadPoints[roadPoints.Count - 400].X, roadPoints[roadPoints.Count - 400].Y);
+            startLine[3] = new PointF(roadPoints[roadPoints.Count - 300].X, roadPoints[roadPoints.Count - 300].Y);
+        }
     }
 }
