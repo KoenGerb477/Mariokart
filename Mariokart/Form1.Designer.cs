@@ -48,29 +48,34 @@
             // 
             // bowserButton
             // 
+            this.bowserButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.bowserButton.Location = new System.Drawing.Point(623, 154);
             this.bowserButton.Name = "bowserButton";
             this.bowserButton.Size = new System.Drawing.Size(200, 200);
             this.bowserButton.TabIndex = 0;
-            this.bowserButton.Text = "Bowser";
             this.bowserButton.UseVisualStyleBackColor = true;
             this.bowserButton.Visible = false;
             this.bowserButton.Click += new System.EventHandler(this.bowserButton_Click);
+            this.bowserButton.MouseLeave += new System.EventHandler(this.bowserButton_MouseLeave);
+            this.bowserButton.MouseHover += new System.EventHandler(this.bowserButton_MouseHover);
             // 
             // marioButton
             // 
             this.marioButton.BackColor = System.Drawing.Color.Transparent;
+            this.marioButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.marioButton.Location = new System.Drawing.Point(78, 154);
             this.marioButton.Name = "marioButton";
             this.marioButton.Size = new System.Drawing.Size(200, 200);
             this.marioButton.TabIndex = 1;
-            this.marioButton.Text = "Mario";
             this.marioButton.UseVisualStyleBackColor = false;
             this.marioButton.Visible = false;
             this.marioButton.Click += new System.EventHandler(this.marioButton_Click);
+            this.marioButton.MouseLeave += new System.EventHandler(this.marioButton_MouseLeave);
+            this.marioButton.MouseHover += new System.EventHandler(this.marioButton_MouseHover);
             // 
             // luigiButton
             // 
+            this.luigiButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.luigiButton.Location = new System.Drawing.Point(78, 390);
             this.luigiButton.Name = "luigiButton";
             this.luigiButton.Size = new System.Drawing.Size(200, 200);
@@ -83,6 +88,7 @@
             // 
             // yoshiButton
             // 
+            this.yoshiButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.yoshiButton.Location = new System.Drawing.Point(334, 390);
             this.yoshiButton.Name = "yoshiButton";
             this.yoshiButton.Size = new System.Drawing.Size(200, 200);
@@ -95,6 +101,7 @@
             // 
             // donkeyButton
             // 
+            this.donkeyButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.donkeyButton.Location = new System.Drawing.Point(623, 390);
             this.donkeyButton.Name = "donkeyButton";
             this.donkeyButton.Size = new System.Drawing.Size(200, 200);
@@ -107,6 +114,7 @@
             // 
             // toadButton
             // 
+            this.toadButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.toadButton.Location = new System.Drawing.Point(908, 390);
             this.toadButton.Name = "toadButton";
             this.toadButton.Size = new System.Drawing.Size(200, 200);
@@ -119,25 +127,29 @@
             // 
             // peachButton
             // 
+            this.peachButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.peachButton.Location = new System.Drawing.Point(334, 154);
             this.peachButton.Name = "peachButton";
             this.peachButton.Size = new System.Drawing.Size(200, 200);
             this.peachButton.TabIndex = 8;
-            this.peachButton.Text = "Peach";
             this.peachButton.UseVisualStyleBackColor = true;
             this.peachButton.Visible = false;
             this.peachButton.Click += new System.EventHandler(this.peachButton_Click);
+            this.peachButton.MouseLeave += new System.EventHandler(this.peachButton_MouseLeave);
+            this.peachButton.MouseHover += new System.EventHandler(this.peachButton_MouseHover);
             // 
             // koopaButton
             // 
+            this.koopaButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.koopaButton.Location = new System.Drawing.Point(908, 154);
             this.koopaButton.Name = "koopaButton";
             this.koopaButton.Size = new System.Drawing.Size(200, 200);
             this.koopaButton.TabIndex = 7;
-            this.koopaButton.Text = "Koopa";
             this.koopaButton.UseVisualStyleBackColor = true;
             this.koopaButton.Visible = false;
             this.koopaButton.Click += new System.EventHandler(this.koopaButton_Click);
+            this.koopaButton.MouseLeave += new System.EventHandler(this.koopaButton_MouseLeave);
+            this.koopaButton.MouseHover += new System.EventHandler(this.koopaButton_MouseHover);
             // 
             // hoverTimer
             // 
