@@ -1,0 +1,1002 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C71F3DF0-3098-4668-BD9A-7051FCB3CE31}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Mariokart</RootNamespace>
+    <AssemblyName>Mariokart</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2813%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2814%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2815%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2816%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2817%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2818%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2820%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2821%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2822%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2825%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2826%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2827%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2828%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2829%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2830%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2831%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2832%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2833%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2834%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2835%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2836%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2837%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2838%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2839%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2840%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2841%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2842%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2843%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2844%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2845%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2846%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2847%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2848%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2849%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2850%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2851%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2852%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2853%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2854%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2855%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2856%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2857%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2858%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2859%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2860%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2861%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2862%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2863%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2864%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2865%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2866%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2867%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2868%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2869%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2870%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2871%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2872%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2873%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2874%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2875%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2876%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2877%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2878%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2879%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2880%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2881%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2882%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2883%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2884%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2885%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2886%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2887%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2888%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2889%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2890%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2891%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2892%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2893%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2894%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2895%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2896%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2897%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2898%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2899%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28100%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28101%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28102%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28103%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28104%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28105%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28106%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28107%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28108%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28109%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28110%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28111%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28112%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28113%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28114%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28115%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28116%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28117%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28118%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28119%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28120%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28121%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28122%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28123%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28124%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28125%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28126%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28127%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28128%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28129%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28130%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28131%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28132%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28133%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28134%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28135%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28136%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28137%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28138%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28139%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28140%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28141%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28142%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28143%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28144%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %28145%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %283%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %284%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %285%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %286%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %287%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %288%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %289%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %2810%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %2811%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2819%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2812%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %283%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %284%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %285%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %286%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %287%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %288%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %289%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %2810%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %2811%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %283%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %284%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %285%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %286%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %287%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %288%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %289%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %2810%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %2811%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %283%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %284%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %285%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %286%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %287%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %288%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %2810%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %2811%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %283%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %284%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %285%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %286%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %287%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %288%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %289%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %2810%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %2811%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %283%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %284%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %285%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %286%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %287%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %288%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %289%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %2810%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %2811%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %283%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %284%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %285%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %286%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %287%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %288%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %289%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %2810%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %2811%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %2812%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %2813%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %2814%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %2815%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %2816%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %2817%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %2818%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %2819%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %2820%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %2821%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %2822%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toad %2823%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %289%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %2812%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %2813%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %2814%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %2815%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %2816%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %2817%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %2818%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %2819%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %2820%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %2821%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %2822%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yoshi %2823%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %283%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %284%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %285%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %286%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %287%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %288%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %289%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2810%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2811%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2823%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario %2824%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %2817%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %2818%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %2819%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %2812%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %2813%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %2814%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %2815%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %2816%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %2820%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %2821%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %2822%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luigi %2823%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %2812%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %2813%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %2814%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %2815%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %2816%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %2817%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %2818%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %2819%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %2820%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %2821%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %2822%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey %2823%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %2812%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %2813%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %2814%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %2815%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %2816%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %2817%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %2818%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %2819%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %2820%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %2821%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %2822%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\koopa %2823%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %2812%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %2813%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %2814%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %2815%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %2816%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %2817%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %2818%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %2819%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %2820%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %2821%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %2822%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bowser %2823%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %2812%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %2813%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %2814%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %2815%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %2816%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %2817%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %2818%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %2819%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %2820%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %2821%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %2822%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\peach %2823%29.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
