@@ -39,11 +39,12 @@
             this.peachButton = new System.Windows.Forms.Button();
             this.koopaButton = new System.Windows.Forms.Button();
             this.hoverTimer = new System.Windows.Forms.Timer(this.components);
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // gameTimer
             // 
-            this.gameTimer.Interval = 1;
+            this.gameTimer.Interval = 12;
             this.gameTimer.Tick += new System.EventHandler(this.gameTimer_Tick);
             // 
             // bowserButton
@@ -155,12 +156,22 @@
             // 
             this.hoverTimer.Tick += new System.EventHandler(this.hoverTimer_Tick);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(171, 70);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(44, 16);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "label1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1182, 753);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.donkeyButton);
             this.Controls.Add(this.toadButton);
             this.Controls.Add(this.peachButton);
@@ -178,6 +189,7 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -193,6 +205,7 @@
         private System.Windows.Forms.Button peachButton;
         private System.Windows.Forms.Button koopaButton;
         private System.Windows.Forms.Timer hoverTimer;
+        private System.Windows.Forms.Label label1;
     }
 }
 

@@ -998,5 +998,20 @@
   <ItemGroup>
     <None Include="Resources\peach %2823%29.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\grassTextureFf.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\grassTextureFr.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\grassTexture.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RoadTexture.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\skyImage.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

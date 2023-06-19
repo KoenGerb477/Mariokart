@@ -523,6 +523,36 @@ namespace Mariokart.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap grassTexture {
+            get {
+                object obj = ResourceManager.GetObject("grassTexture", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap grassTextureFf {
+            get {
+                object obj = ResourceManager.GetObject("grassTextureFf", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap grassTextureFr {
+            get {
+                object obj = ResourceManager.GetObject("grassTextureFr", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap koopa__1_ {
             get {
                 object obj = ResourceManager.GetObject("koopa__1_", resourceCulture);
@@ -1566,6 +1596,26 @@ namespace Mariokart.Properties {
         internal static System.Drawing.Bitmap peach__9_ {
             get {
                 object obj = ResourceManager.GetObject("peach__9_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap RoadTexture {
+            get {
+                object obj = ResourceManager.GetObject("RoadTexture", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap skyImage {
+            get {
+                object obj = ResourceManager.GetObject("skyImage", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

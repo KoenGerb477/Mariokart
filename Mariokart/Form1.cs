@@ -9,32 +9,39 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace Mariokart
 {
     public partial class Form1 : Form
     {
-        List <Point> trackPoints = new List <Point> ();
-        List <PointF> roadPoints = new List<PointF> ();
+        List<Point> trackPoints = new List<Point>();
+        List<PointF> roadPoints = new List<PointF>();
 
-        PointF[] startLine = new PointF[4]; 
+        PointF[] startLine = new PointF[4];
 
         string state = "main menu";
 
         Rectangle player = new Rectangle();
-        Rectangle pipe = new Rectangle();
+
+        Rectangle grass = new Rectangle();
+
+        Rectangle playerTracker = new Rectangle();
 
         int counter = 0;
 
         Font drawFont = new Font("Arial", 50, FontStyle.Bold);
         SolidBrush redBrush = new SolidBrush(Color.Red);
         SolidBrush blueBrush = new SolidBrush(Color.Blue);
+        TextureBrush grassBrush;
         SolidBrush greenBrush = new SolidBrush(Color.Green);
-        SolidBrush darkGreenBrush = new SolidBrush(Color.DarkGreen);
-        SolidBrush blackBrush = new SolidBrush(Color.Black);
         SolidBrush grayBrush = new SolidBrush(Color.Gray);
+        SolidBrush darkGrayBrush = new SolidBrush(Color.DarkGray);
+        SolidBrush blackBrush = new SolidBrush(Color.Black);
+        TextureBrush roadBrush;
         Pen roadPen = new Pen(Color.Gray, 1);
-        Pen blackPen = new Pen (Color.Black, 1);
+        Pen blackPen = new Pen(Color.Black, 1);
         Pen whitePen = new Pen(Color.White, 1);
 
         bool wDown = false;
@@ -46,13 +53,13 @@ namespace Mariokart
         const int playerHeight = 120;
         const int horizonHeight = 753/6;
 
-        int driveSpeed = 0;
-        const int driveAcceleration = 1;
-        const int maxAcceleration = 20;
+        float driveSpeed = 0;
+        const float driveAcceleration = 0.25f;
+        float maxSpeed = 20;
 
         float turnDirection = 0;
         const float turningAcceleration = 0.5f;
-        const int maxTurnSpeed = 12;
+        const int maxTurnSpeed = 24;
 
         bool startLineActive = true;
         bool turnRight = false;
@@ -60,8 +67,19 @@ namespace Mariokart
         bool turnLeft = false;
         bool straightenOutFromLeft = false;
 
-        int distanceDriven = 0;
-        
+        float distanceDriven = 2;
+        float totalDistance = 1;
+        int distancePerW = 4;
+
+        List<float>npcDistance = new List<float>();
+        List<string>npcName =  new List<string>();
+        List<int> npcSpeed = new List<int>();
+        List<int> npcBaseLineSpeed = new List<int>();
+        List<string> npcToDraw = new List<string>();
+        List<Rectangle> npcDrawPosition= new List<Rectangle>();
+
+        List<string> leaderboard = new List<string>();
+
         float perspectiveAngle = 0.5f;
 
         float driftAmount = 0.1f;
@@ -94,14 +112,22 @@ namespace Mariokart
 
         Image[] playerImage = new Image[13];
 
-        string characterHovered;
+        string characterSelected;
 
         Stopwatch playerStopwatch = new Stopwatch();
+
+        Random randGen =   new Random();
+
+        int tickCounter = 0;
 
         public Form1()
         {
             InitializeComponent();
             player = new Rectangle((this.Width / 2) - playerWidth / 2, this.Height - playerHeight * 3 / 2, playerWidth, playerHeight);
+
+            grass = new Rectangle(0 - this.Width, 0 - this.Height, this.Width * 2, this.Height *2);
+
+            playerTracker = new Rectangle(this.Width - 50, 30, 20, this.Height - 60);
 
             marioImages[13] = Properties.Resources.mario__7_;
             marioImages[14] = Properties.Resources.mario__6_;
@@ -302,6 +328,9 @@ namespace Mariokart
             peachImages[2] = Properties.Resources.peach__11_;
             peachImages[1] = Properties.Resources.peach__1_;
             peachImages[0] = Properties.Resources.peach__1_;
+
+            grassBrush = new TextureBrush(Properties.Resources.grassTextureFr);
+            roadBrush = new TextureBrush(Properties.Resources.RoadTexture);
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -351,6 +380,7 @@ namespace Mariokart
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
+            //move player
             if (wDown == true || driveSpeed > 0)
             {
                 MoveForward();
@@ -360,14 +390,23 @@ namespace Mariokart
                 MoveBackwards();
             }
             if (wDown == true && aDown == dDown)
-            {
+            {          
                 if (turnDirection > 0)
                 {
-                    turnDirection -= turningAcceleration;
+                    turnDirection -= turningAcceleration * 2;
                 }
                 else if (turnDirection < 0)
                 {
-                    turnDirection += turningAcceleration;
+                    turnDirection += turningAcceleration * 2;
+                }
+
+                if (turnDirection > 0 && driveSpeed > 0)
+                {
+                    MoveSideways(turningAcceleration);
+                }
+                if (turnDirection < 0 && driveSpeed > 0)
+                {
+                    MoveSideways(-turningAcceleration);
                 }
             }
             else
@@ -382,71 +421,107 @@ namespace Mariokart
                 }
             }
 
+            //if on grass go slower
+            PointF pointL = new PointF (0,0);
+            PointF pointR = new PointF(0,0);
+            int c = 0;
+            foreach (PointF roadPoint in roadPoints)
+            {
+                if (roadPoint.Y == (playerHeight + player.Y))
+                {
+                    if (c == 0)
+                    {
+                        pointL = roadPoint;
+                        c++;
+                    }
+                    else
+                    {
+                        pointR = roadPoint;
+                    }
+                }
+            }
+
+            if (pointL.X > player.X || pointR.X < player.X + playerWidth)
+            {
+                maxSpeed = 10;
+                distancePerW = 1;   
+            }
+            else
+            {
+                maxSpeed = 20;
+                distancePerW = 2;    
+            }
+            
+
             //track sequence
+            if (distanceDriven % 2 != 0 && distancePerW == 2)
+            {
+                distanceDriven--;
+            }
             switch (distanceDriven)
             {
-                case 150:
+                case 300:
                     turnRight = true;
                     break;
-                case 300:
+                case 600:
                     straightenOutFromRight = true;
                     turnRight = false;
                     break;
-                case 450:
+                case 900:
                     turnLeft = true;
                     driftAmount = -0.1f;
                     straightenOutFromRight = false;
                     break;
-                case 600:
-                    straightenOutFromLeft = true;
-                    turnLeft = false;
-                    break;
-                case 750:
-                    turnLeft = true;
-                    driftAmount = -0.1f;
-                    straightenOutFromLeft = false;
-                    break;
-                case 900:
-                    straightenOutFromLeft = true;
-                    turnLeft = false;
-                    break;
-                case 1050:
-                    turnRight = true;
-                    driftAmount = 0.1f;
-                    straightenOutFromLeft = false;
-                    break;
                 case 1200:
-                    straightenOutFromRight = true;
-                    turnRight = false;
-                    break;
-                case 1350:
-                    turnLeft = true;
-                    driftAmount = -0.1f;
-                    straightenOutFromLeft = false;
+                    straightenOutFromLeft = true;
+                    turnLeft = false;
                     break;
                 case 1500:
-                    straightenOutFromLeft = true;
-                    turnLeft = false;
-                    break;
-                case 1650:
-                    turnRight = true;
-                    driftAmount = 0.1f;
+                    turnLeft = true;
+                    driftAmount = -0.1f;
                     straightenOutFromLeft = false;
                     break;
                 case 1800:
-                    straightenOutFromRight = true;
-                    turnRight = false;
+                    straightenOutFromLeft = true;
+                    turnLeft = false;
                     break;
-                case 1950:
+                case 2100:
                     turnRight = true;
                     driftAmount = 0.1f;
                     straightenOutFromLeft = false;
                     break;
-                case 2100:
+                case 2400:
                     straightenOutFromRight = true;
                     turnRight = false;
                     break;
-                case 2250:
+                case 2700:
+                    turnLeft = true;
+                    driftAmount = -0.1f;
+                    straightenOutFromLeft = false;
+                    break;
+                case 3000:
+                    straightenOutFromLeft = true;
+                    turnLeft = false;
+                    break;
+                case 3300:
+                    turnRight = true;
+                    driftAmount = 0.1f;
+                    straightenOutFromLeft = false;
+                    break;
+                case 3600:
+                    straightenOutFromRight = true;
+                    turnRight = false;
+                    break;
+                case 3900:
+                    turnRight = true;
+                    driftAmount = 0.1f;
+                    straightenOutFromLeft = false;
+                    break;
+                case 4200:
+                    straightenOutFromRight = true;
+                    turnRight = false;
+                    break;
+                case 4500:
                     distanceDriven = 0;
                     MakeStartLine();
                     while (startLine[0].Y > horizonHeight)
@@ -466,11 +541,125 @@ namespace Mariokart
                     break;
                 default: break;
             }
-            
-            if (counter == 3)
+
+
+            if (counter == 0)
             {
+                totalDistance = distanceDriven;
+            }
+            else if (counter == 1)
+            {
+                totalDistance = distanceDriven + 4500;
+            }
+            else if (counter == 2)
+            {
+                totalDistance = distanceDriven + 9000;
+            }
+            //3 laps and then end game
+            else
+            {
+                leaderboard.Add(characterSelected);
+
+                for (int i = 0; i < npcName.Count; i++)
+                {
+                    if (npcName[i] == "done")
+                    {
+                        npcDistance.RemoveAt(i);
+                        npcName.RemoveAt(i);
+                    }
+                }
+                for (int i = 0; i < 8 - leaderboard.Count; i++)
+                {
+                    string fastestNPC = "";
+                    int fastestDistance = 0;
+                    int rememberJ = 0;
+                    for (int j = 0; j < npcDistance.Count; j++)
+                    {
+                        if (npcDistance[j] > fastestDistance)
+                        {
+                            fastestDistance = Convert.ToInt32(npcDistance[j]);
+                            fastestNPC = npcName[j];
+                            rememberJ = j;
+                        }
+                    }
+                    leaderboard.Add(fastestNPC);
+                    npcDistance.RemoveAt(rememberJ); 
+                    npcName.RemoveAt(rememberJ);
+                }
+
                 state = "leaderboard";
+                playerStopwatch.Stop();
                 gameTimer.Enabled = false;
+            }
+
+            //keep track of NPC positions
+            for (int i = 0; i < npcName.Count; i++)
+            {
+                npcDistance[i] += npcSpeed[i];
+
+                if (npcDistance[i] - totalDistance > -50 && npcDistance[i] - totalDistance < 200)
+                {
+                    npcToDraw.Add(npcName[i]);
+
+                    int y = Convert.ToInt32(this.Height - ((this.Height-playerHeight)*((npcDistance[i]-totalDistance)/200)));
+
+                    pointL = new PointF(0, 0);
+                    pointR = new PointF(0, 0);
+                    c = 0;
+                    foreach (PointF roadPoint in roadPoints)
+                    {
+                        if (Convert.ToInt32(roadPoint.Y) == y)
+                        {
+                            if (c == 0)
+                            {
+                                pointL = roadPoint;
+                                c++;
+                            }
+                            else
+                            {
+                                pointR = roadPoint;
+                            }
+                        }
+                    }
+                    int x = (Convert.ToInt32(pointR.X + pointL.X) / 2) - playerWidth / 2;
+
+                    Rectangle npcPosition = new Rectangle(x, y, playerWidth, playerHeight);
+                    npcDrawPosition.Add(npcPosition);
+                }
+
+                //make random npc speed
+                if (tickCounter % 100 == 0)
+                {
+                    npcSpeed[i] = randGen.Next(npcBaseLineSpeed[i] - 3, npcBaseLineSpeed[i] +3);
+                    if (npcSpeed[i] < 1)
+                    {
+                        npcSpeed[i] = 1;
+                    }
+                }
+                if ((npcDistance[i] - totalDistance) % 100 == 0 && npcDistance[i] - totalDistance > 0)
+                {
+                    npcBaseLineSpeed[i]--;
+                }
+                else if ((npcDistance[i] - totalDistance) % 300 == 0 && npcDistance[i] - totalDistance < 0)
+                {
+                    npcBaseLineSpeed[i]++;
+                }
+
+                if (npcDistance[i] > 13500 && npcName[i] != "done")
+                {
+                    leaderboard.Add(npcName[i]);
+                    npcName[i] = "done";
+                }
+            }
+
+            //if collide with npc slow down
+            for (int i = 0; i < npcDrawPosition.Count; i++)
+            {
+                if (npcDrawPosition[i].IntersectsWith(player))
+                {
+                    driveSpeed = 0;
+                    distancePerW = 0;
+                }
             }
 
             Refresh();
@@ -478,6 +667,7 @@ namespace Mariokart
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
+            label1.Text = distanceDriven.ToString();
             if (state == "main menu")
             {
                 e.Graphics.DrawString("MARIOKART", drawFont, redBrush, 250, 100);
@@ -485,8 +675,8 @@ namespace Mariokart
             }
             else if (state == "play game")
             {
-                e.Graphics.FillRectangle(greenBrush, 0, 0, Width, Height);
-                
+                e.Graphics.FillRectangle(greenBrush, grass);
+
                 PointF[] roadArray = new PointF[roadPoints.Count];
                 for (int i = 0; i < roadPoints.Count; i++)
                 {
@@ -494,16 +684,119 @@ namespace Mariokart
                 }
                 e.Graphics.FillPolygon(grayBrush, roadArray);
 
-                if(startLineActive == true)
+                if (startLineActive == true)
                 {
                     e.Graphics.FillPolygon(blackBrush, startLine);
                 }
 
-                e.Graphics.FillRectangle(blueBrush, 0, 0, Width, horizonHeight);
+                e.Graphics.DrawImage(Properties.Resources.skyImage, 0, 0, this.Width*2, horizonHeight);
 
-                e.Graphics.FillRectangle(darkGreenBrush, pipe);
+                if (npcToDraw.Count > 0)
+                {
+                    for (int i = 0; i < npcToDraw.Count; i++)
+                    {
+                        switch (npcToDraw[i])
+                        {
+                            case "bowser":
+                                e.Graphics.DrawImage(bowserImages[6], npcDrawPosition[i]);
+                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
+                                break;
+                            case "mario":
+                                e.Graphics.DrawImage(marioImages[6], npcDrawPosition[i]);
+                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
+                                break;
+                            case "luigi":
+                                e.Graphics.DrawImage(luigiImages[6], npcDrawPosition[i]);
+                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
+                                break;
+                            case "toad":
+                                e.Graphics.DrawImage(toadImages[6], npcDrawPosition[i]);
+                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
+                                break;
+                            case "donkey":
+                                e.Graphics.DrawImage(donkeyImages[6], npcDrawPosition[i]);
+                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
+                                break;
+                            case "koopa":
+                                e.Graphics.DrawImage(koopaImages[6], npcDrawPosition[i]);
+                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
+                                break;
+                            case "peach":
+                                e.Graphics.DrawImage(peachImages[6], npcDrawPosition[i]);
+                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
+                                break;
+                            case "yoshi":
+                                e.Graphics.DrawImage(yoshiImages[6], npcDrawPosition[i]);
+                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
+                                break;
+                        }
+                    }
+                }
+                npcToDraw.Clear();
+                npcDrawPosition.Clear();
 
-                e.Graphics.DrawImage(playerImage[Convert.ToInt16((turnDirection / 2) + 6)], player);
+                e.Graphics.DrawImage(playerImage[Convert.ToInt16((turnDirection / 4) + 6)], player);
+
+                e.Graphics.FillRectangle(darkGrayBrush, playerTracker);
+                
+                for (int i = 0; i < npcName.Count; i++)
+                {
+                    switch (npcName[i])
+                    {
+                        case "bowser":
+                            e.Graphics.DrawImage(bowserImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (npcDistance[i]/4500) * (playerTracker.Height/3), 20, 20);
+                            break;
+                        case "mario":
+                            e.Graphics.DrawImage(marioImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (npcDistance[i]/4500) * (playerTracker.Height/3), 20, 20);
+                            break;
+                        case "luigi":
+                            e.Graphics.DrawImage(luigiImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (npcDistance[i]/4500) * (playerTracker.Height/3), 20, 20);
+                            break;
+                        case "toad":
+                            e.Graphics.DrawImage(toadImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (npcDistance[i]/4500) * (playerTracker.Height/3), 20, 20);
+                            break;
+                        case "donkey":
+                            e.Graphics.DrawImage(donkeyImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (npcDistance[i]/4500) * (playerTracker.Height/3), 20, 20);
+                            break;
+                        case "koopa":
+                            e.Graphics.DrawImage(koopaImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (npcDistance[i]/4500) * (playerTracker.Height/3), 20, 20);
+                            break;
+                        case "peach":
+                            e.Graphics.DrawImage(peachImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (npcDistance[i]/4500) * (playerTracker.Height/3), 20, 20);
+                            break;
+                        case "yoshi":
+                            e.Graphics.DrawImage(yoshiImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (npcDistance[i]/4500) * (playerTracker.Height/3), 20, 20);
+                            break;
+                    }
+                }
+
+                switch (characterSelected)
+                {
+                    case "bowser":
+                        e.Graphics.DrawImage(bowserImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (totalDistance/4500) * (playerTracker.Height/3), 20, 20);
+                        break;
+                    case "mario":
+                        e.Graphics.DrawImage(marioImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (totalDistance/4500) * (playerTracker.Height/3), 20, 20);
+                        break;
+                    case "luigi":
+                        e.Graphics.DrawImage(luigiImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (totalDistance/4500) * (playerTracker.Height/3), 20, 20);
+                        break;
+                    case "toad":
+                        e.Graphics.DrawImage(toadImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (totalDistance/4500) * (playerTracker.Height/3), 20, 20);
+                        break;
+                    case "donkey":
+                        e.Graphics.DrawImage(donkeyImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (totalDistance/4500) * (playerTracker.Height/3), 20, 20);
+                        break;
+                    case "koopa":
+                        e.Graphics.DrawImage(koopaImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (totalDistance/4500) * (playerTracker.Height/3), 20, 20);
+                        break;
+                    case "peach":
+                        e.Graphics.DrawImage(peachImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (totalDistance/4500) * (playerTracker.Height/3), 20, 20);
+                        break;
+                    case "yoshi":
+                        e.Graphics.DrawImage(yoshiImages[18], playerTracker.X, (playerTracker.Y + playerTracker.Height) - (totalDistance/4500) * (playerTracker.Height/3), 20, 20);
+                        break;
+                }
             }
             else if (state == "select character")
             {
@@ -512,7 +805,7 @@ namespace Mariokart
                 koopaButton.Visible = true;
                 peachButton.Visible = true;
                 toadButton.Visible = true;
-                donkeyButton.Visible = true; 
+                donkeyButton.Visible = true;
                 luigiButton.Visible = true;
                 yoshiButton.Visible = true;
                 marioButton.Enabled = true;
@@ -527,7 +820,7 @@ namespace Mariokart
                 toadButton.Image = toadImages[spinningToadImage];
                 luigiButton.Image = luigiImages[spinningLuigiImage];
                 donkeyButton.Image = donkeyImages[spinningDonkeyImage];
-                yoshiButton.Image = yoshiImages[spinningYoshiImage]; 
+                yoshiButton.Image = yoshiImages[spinningYoshiImage];
                 bowserButton.Image = bowserImages[spinningBowserImage];
                 marioButton.Image = marioImages[spinningMarioImage];
                 koopaButton.Image = koopaImages[spinningKoopaImage];
@@ -535,14 +828,22 @@ namespace Mariokart
             }
             else if (state == "leaderboard")
             {
-
+                //e.Graphics.DrawString($"{characterSelected}: " + playerStopwatch.Elapsed.ToString(@"m\:ss"), drawFont, redBrush, 250, 100);
+                int position = 1;
+                int height = 50;
+                for (int i = 0; i < leaderboard.Count; i++)
+                {
+                    e.Graphics.DrawString($"{position}.       {leaderboard[i]}", drawFont, redBrush, 250, height);
+                    position++;
+                    height += 70;
+                }
             }
         }
 
         public void MakeTrack()
         {
             gameTimer.Enabled = true;
-            
+
             float lastX = 0;
             float x = 0;
             //make road
@@ -567,16 +868,26 @@ namespace Mariokart
 
         public void MoveForward()
         {
-            if (wDown == true && driveSpeed < maxAcceleration)
+            
+            distanceDriven+=distancePerW;
+            //grass.Y += distancePerW;
+            if(grass.Y > 0)
+            {
+                grass.Y = 0 - this.Height;
+            }
+
+            if (wDown == true && driveSpeed < maxSpeed)
             {
                 driveSpeed += driveAcceleration;
+            }
+            else if (wDown == true && driveSpeed > maxSpeed)
+            {
+                driveSpeed -= driveAcceleration;
             }
             else if (wDown == false && driveSpeed > 0)
             {
                 driveSpeed -= driveAcceleration;
             }
-
-            distanceDriven++;
 
             if (startLineActive == true)
             {
@@ -773,11 +1084,6 @@ namespace Mariokart
                 startLine[2].X += turnDirection;
                 startLine[3].X += turnDirection;
             }
-
-            /*if (pipeActive == true)
-            { 
-                pipe.X -= driveSpeed;
-            }*/
         }
 
         public void MoveBackwards()
@@ -796,16 +1102,6 @@ namespace Mariokart
                 startLine[2].X-=driveSpeed * perspectiveAngle;
                 startLine[3].X-=(driveSpeed * 1.5f) * perspectiveAngle;
             }
-
-            /*if (pipeActive == true)
-            {
-                pipeSize-=5;
-
-                pipe.X += driveSpeed * 2;
-                pipe.Y -= driveSpeed;
-                pipe.Width = pipeSize;
-                pipe.Height = pipeSize;
-            }*/
         }
 
         private void marioButton_Click(object sender, EventArgs e)
@@ -814,6 +1110,7 @@ namespace Mariokart
             {
                 playerImage[i] = marioImages[i];
             }
+            characterSelected = "mario";
 
             StartTheGame();
         }
@@ -824,6 +1121,7 @@ namespace Mariokart
             {
                 playerImage[i] = bowserImages[i];
             }
+            characterSelected = "bowser";
 
             StartTheGame();
         }
@@ -834,6 +1132,7 @@ namespace Mariokart
             {
                 playerImage[i] = peachImages[i];
             }
+            characterSelected = "peach";
 
             StartTheGame();
         }
@@ -844,6 +1143,7 @@ namespace Mariokart
             {
                 playerImage[i] = koopaImages[i];
             }
+            characterSelected = "koopa";
 
             StartTheGame();
         }
@@ -854,6 +1154,7 @@ namespace Mariokart
             {
                 playerImage[i] = luigiImages[i];
             }
+            characterSelected = "luigi";
 
             StartTheGame();
         }
@@ -864,6 +1165,7 @@ namespace Mariokart
             {
                 playerImage[i] = yoshiImages[i];
             }
+            characterSelected = "yoshi";
 
             StartTheGame();
         }
@@ -874,6 +1176,7 @@ namespace Mariokart
             {
                 playerImage[i] = donkeyImages[i];
             }
+            characterSelected = "donkey";
 
             StartTheGame();
         }
@@ -884,6 +1187,7 @@ namespace Mariokart
             {
                 playerImage[i] = toadImages[i];
             }
+            characterSelected = "toad";
 
             StartTheGame();
         }
@@ -891,7 +1195,7 @@ namespace Mariokart
         private void toadButton_MouseHover(object sender, EventArgs e)
         {
             hoverTimer.Enabled = true;
-            characterHovered = "toad";
+            characterSelected = "toad";
         }
 
         private void toadButton_MouseLeave(object sender, EventArgs e)
@@ -905,7 +1209,7 @@ namespace Mariokart
         private void luigiButton_MouseHover(object sender, EventArgs e)
         {
             hoverTimer.Enabled = true;
-            characterHovered = "luigi";
+            characterSelected = "luigi";
         }
 
         private void luigiButton_MouseLeave(object sender, EventArgs e)
@@ -918,7 +1222,7 @@ namespace Mariokart
         private void donkeyButton_MouseHover(object sender, EventArgs e)
         {
             hoverTimer.Enabled = true;
-            characterHovered = "donkey";
+            characterSelected = "donkey";
         }
 
         private void donkeyButton_MouseLeave(object sender, EventArgs e)
@@ -931,7 +1235,7 @@ namespace Mariokart
         private void yoshiButton_MouseHover(object sender, EventArgs e)
         {
             hoverTimer.Enabled = true;
-            characterHovered = "yoshi";
+            characterSelected = "yoshi";
         }
 
         private void yoshiButton_MouseLeave(object sender, EventArgs e)
@@ -944,7 +1248,7 @@ namespace Mariokart
         private void marioButton_MouseHover(object sender, EventArgs e)
         {
             hoverTimer.Enabled = true;
-            characterHovered = "mario";
+            characterSelected = "mario";
         }
 
         private void marioButton_MouseLeave(object sender, EventArgs e)
@@ -957,7 +1261,7 @@ namespace Mariokart
         private void peachButton_MouseHover(object sender, EventArgs e)
         {
             hoverTimer.Enabled = true;
-            characterHovered = "peach";
+            characterSelected = "peach";
         }
 
         private void peachButton_MouseLeave(object sender, EventArgs e)
@@ -970,7 +1274,7 @@ namespace Mariokart
         private void bowserButton_MouseHover(object sender, EventArgs e)
         {
             hoverTimer.Enabled = true;
-            characterHovered = "bowser";
+            characterSelected = "bowser";
         }
 
         private void bowserButton_MouseLeave(object sender, EventArgs e)
@@ -983,7 +1287,7 @@ namespace Mariokart
         private void koopaButton_MouseHover(object sender, EventArgs e)
         {
             hoverTimer.Enabled = true;
-            characterHovered = "koopa";
+            characterSelected = "koopa";
         }
 
         private void koopaButton_MouseLeave(object sender, EventArgs e)
@@ -995,7 +1299,7 @@ namespace Mariokart
 
         private void hoverTimer_Tick(object sender, EventArgs e)
         {
-            switch (characterHovered)
+            switch (characterSelected)
             {
                 case "toad":
                     if (spinningToadImage == 22)
@@ -1101,14 +1405,15 @@ namespace Mariokart
 
             driveSpeed = 0;
             turnDirection = 0;
-            
+
             startLineActive = true;
             turnRight = false;
             straightenOutFromRight = false;
             turnLeft = false;
             straightenOutFromLeft = false;
 
-            distanceDriven = 0;
+            distanceDriven = 2;
+            totalDistance = 1;
 
             perspectiveAngle = 0.5f;
 
@@ -1129,10 +1434,47 @@ namespace Mariokart
             donkeyButton.Enabled = false;
             toadButton.Enabled = false;
 
+            npcDistance.Clear();
+            npcName.Clear();
+            npcSpeed.Clear();
+            npcToDraw.Clear();
+            npcDrawPosition.Clear();
+
+            for (int i = 0; i < 8; i++)
+            {
+                //set distances to 0
+                npcDistance.Add(1);
+            }
+            //choose random characters for npc's
+            npcName.Add("bowser");
+            npcName.Add("mario");
+            npcName.Add("luigi");
+            npcName.Add("toad");
+            npcName.Add("yoshi");
+            npcName.Add("koopa");
+            npcName.Add("peach");
+            npcName.Add("donkey");
+
+            for (int j = 0; j < npcName.Count; j++)
+            {
+                if (npcName[j] == characterSelected)
+                {
+                    npcName.RemoveAt(j);
+                    npcDistance.RemoveAt(j);
+                }
+            }
+            for (int i = 0; i < npcName.Count; i++)
+            {
+                npcBaseLineSpeed.Add(randGen.Next(1, 5));
+                npcSpeed.Add(npcBaseLineSpeed[i]);
+            }
+
+            playerStopwatch.Start();
+
             MakeTrack();
             MakeStartLine();
         }
-        
+
         public void MakeStartLine()
         {
             startLine[0] = new PointF(roadPoints[300].X, roadPoints[300].Y);
