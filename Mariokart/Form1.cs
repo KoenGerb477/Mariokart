@@ -11,6 +11,7 @@ using System.Windows.Forms.VisualStyles;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using System.IO;
 
 namespace Mariokart
 {
@@ -49,9 +50,9 @@ namespace Mariokart
         bool sDown = false;
         bool dDown = false;
 
-        const int playerWidth = 112;
-        const int playerHeight = 120;
-        const int horizonHeight = 753/6;
+        const int playerWidth = 140;
+        const int playerHeight = 150;
+        int horizonHeight;
 
         float driveSpeed = 0;
         const float driveAcceleration = 0.25f;
@@ -120,9 +121,32 @@ namespace Mariokart
 
         int tickCounter = 0;
 
+        List <Rectangle> powerUpCubes = new List<Rectangle>();
+
+        System.Windows.Media.MediaPlayer coconutMall = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer finalLap = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer mainMenu = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer results = new System.Windows.Media.MediaPlayer();
+        string song = "main menu";
+
         public Form1()
         {
             InitializeComponent();
+            horizonHeight = this.Height/6;
+
+            coconutMall.Open(new Uri(Application.StartupPath + "/Resources/Coconut Mall.mp3"));
+            coconutMall.MediaEnded += new EventHandler(coconutMallMedia_MediaEnded);
+
+            mainMenu.Open(new Uri(Application.StartupPath + "/Resources/Main Menu.mp3"));
+            mainMenu.MediaEnded += new EventHandler(mainMenuMedia_MediaEnded);
+            mainMenu.Play(); 
+            
+            finalLap.Open(new Uri(Application.StartupPath + "/Resources/Coconut Mall (Final Lap).mp3"));
+            finalLap.MediaEnded += new EventHandler(finalLapMedia_MediaEnded);
+
+            results.Open(new Uri(Application.StartupPath + "/Resources/Victory & Winning Results.mp3"));
+            results.MediaEnded += new EventHandler(resultsMedia_MediaEnded);
+
             player = new Rectangle((this.Width / 2) - playerWidth / 2, this.Height - playerHeight * 3 / 2, playerWidth, playerHeight);
 
             grass = new Rectangle(0 - this.Width, 0 - this.Height, this.Width * 2, this.Height *2);
@@ -337,13 +361,6 @@ namespace Mariokart
         {
             switch (e.KeyCode)
             {
-                case Keys.Space:
-                    if (state == "main menu")
-                    {
-                        state = "select character";
-                        Refresh();
-                    }
-                    break;
                 case Keys.W:
                     wDown = true;
                     break;
@@ -466,6 +483,7 @@ namespace Mariokart
                 case 600:
                     straightenOutFromRight = true;
                     turnRight = false;
+                    MakePowerUps();
                     break;
                 case 900:
                     turnLeft = true;
@@ -475,6 +493,7 @@ namespace Mariokart
                 case 1200:
                     straightenOutFromLeft = true;
                     turnLeft = false;
+                    MakePowerUps();
                     break;
                 case 1500:
                     turnLeft = true;
@@ -484,6 +503,7 @@ namespace Mariokart
                 case 1800:
                     straightenOutFromLeft = true;
                     turnLeft = false;
+                    MakePowerUps();
                     break;
                 case 2100:
                     turnRight = true;
@@ -493,6 +513,7 @@ namespace Mariokart
                 case 2400:
                     straightenOutFromRight = true;
                     turnRight = false;
+                    MakePowerUps();
                     break;
                 case 2700:
                     turnLeft = true;
@@ -502,6 +523,7 @@ namespace Mariokart
                 case 3000:
                     straightenOutFromLeft = true;
                     turnLeft = false;
+                    MakePowerUps();
                     break;
                 case 3300:
                     turnRight = true;
@@ -511,6 +533,7 @@ namespace Mariokart
                 case 3600:
                     straightenOutFromRight = true;
                     turnRight = false;
+                    MakePowerUps();
                     break;
                 case 3900:
                     turnRight = true;
@@ -554,10 +577,15 @@ namespace Mariokart
             else if (counter == 2)
             {
                 totalDistance = distanceDriven + 9000;
+                finalLap.Play();
+                coconutMall.Stop();
             }
             //3 laps and then end game
             else
             {
+                finalLap.Stop();
+                results.Play();
+
                 leaderboard.Add(characterSelected);
 
                 for (int i = 0; i < npcName.Count; i++)
@@ -566,9 +594,10 @@ namespace Mariokart
                     {
                         npcDistance.RemoveAt(i);
                         npcName.RemoveAt(i);
+                        i--;
                     }
                 }
-                for (int i = 0; i < 8 - leaderboard.Count; i++)
+                for (int i = 0; i < npcName.Count; i++)
                 {
                     string fastestNPC = "";
                     int fastestDistance = 0;
@@ -585,6 +614,7 @@ namespace Mariokart
                     leaderboard.Add(fastestNPC);
                     npcDistance.RemoveAt(rememberJ); 
                     npcName.RemoveAt(rememberJ);
+                    i--;
                 }
 
                 state = "leaderboard";
@@ -602,6 +632,7 @@ namespace Mariokart
                     npcToDraw.Add(npcName[i]);
 
                     int y = Convert.ToInt32(this.Height - ((this.Height-playerHeight)*((npcDistance[i]-totalDistance)/200)));
+                    int size = Convert.ToInt32((y + playerHeight)/((player.Y - horizonHeight)/(playerHeight/2)));
 
                     pointL = new PointF(0, 0);
                     pointR = new PointF(0, 0);
@@ -623,7 +654,7 @@ namespace Mariokart
                     }
                     int x = (Convert.ToInt32(pointR.X + pointL.X) / 2) - playerWidth / 2;
 
-                    Rectangle npcPosition = new Rectangle(x, y, playerWidth, playerHeight);
+                    Rectangle npcPosition = new Rectangle(x, y, size, size);
                     npcDrawPosition.Add(npcPosition);
                 }
 
@@ -657,8 +688,41 @@ namespace Mariokart
             {
                 if (npcDrawPosition[i].IntersectsWith(player))
                 {
-                    driveSpeed = 0;
-                    distancePerW = 0;
+                    if (npcDrawPosition[i].Y < player.Y && player.X > npcDrawPosition[i].X - npcDrawPosition[i].Width / 2 && player.X < npcDrawPosition[i].X + npcDrawPosition[i].Width * 1.5)
+                    {
+                        driveSpeed = 0;
+                        distancePerW = 0;
+                    }
+                    ////else if (npcDrawPosition[i].Y > player.Y && player.X > npcDrawPosition[i].X - npcDrawPosition[i].Width / 2 && player.X < npcDrawPosition[i].X + npcDrawPosition[i].Width * 1.5)
+                    ////{
+                    ////    Rectangle temp = npcDrawPosition[i];
+                    ////    temp.Y = player.Y + player.Height;
+                    ////    npcDrawPosition[i] = temp;
+                    ////    driveSpeed++;
+                    ////    distancePerW++;
+                    ////}
+                    else if (npcDrawPosition[i].X < player.X)
+                    {
+                        Rectangle temp = npcDrawPosition[i];
+                        temp.X = player.X - player.Width;
+                        npcDrawPosition[i] = temp;
+
+                        if (turnDirection > maxTurnSpeed)
+                        {
+                            turnDirection--;
+                        }
+                    }
+                    else if (npcDrawPosition[i].X > player.X)
+                    {
+                        Rectangle temp = npcDrawPosition[i];
+                        temp.X = player.X + player.Width;
+                        npcDrawPosition[i] = temp;
+
+                        if (turnDirection < maxTurnSpeed)
+                        {
+                            turnDirection++;
+                        }
+                    }
                 }
             }
 
@@ -667,14 +731,26 @@ namespace Mariokart
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            label1.Text = distanceDriven.ToString();
             if (state == "main menu")
             {
-                e.Graphics.DrawString("MARIOKART", drawFont, redBrush, 250, 100);
-                e.Graphics.DrawString("Press SPACE to play", drawFont, redBrush, 125, 200);
+                e.Graphics.DrawImage(Properties.Resources.MarioKartBackgroundImage, 0, 0, Width, Height);
+
+                titleLabel.Visible = true;
+                titleLabel.Text = "Racing Karts and Also Mario";
+                nextButton.Visible = false;
+                nextButton.Enabled = false;
+
+                leaderboardLabel.Visible = false;
+
+                playButton.Visible = true;
+                playButton.Enabled = true;
+                exitButton.Visible = true;
+                exitButton.Enabled = true;
             }
             else if (state == "play game")
             {
+                titleLabel.Visible = false;
+
                 e.Graphics.FillRectangle(greenBrush, grass);
 
                 PointF[] roadArray = new PointF[roadPoints.Count];
@@ -699,35 +775,27 @@ namespace Mariokart
                         {
                             case "bowser":
                                 e.Graphics.DrawImage(bowserImages[6], npcDrawPosition[i]);
-                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
                                 break;
                             case "mario":
                                 e.Graphics.DrawImage(marioImages[6], npcDrawPosition[i]);
-                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
                                 break;
                             case "luigi":
                                 e.Graphics.DrawImage(luigiImages[6], npcDrawPosition[i]);
-                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
                                 break;
                             case "toad":
                                 e.Graphics.DrawImage(toadImages[6], npcDrawPosition[i]);
-                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
                                 break;
                             case "donkey":
                                 e.Graphics.DrawImage(donkeyImages[6], npcDrawPosition[i]);
-                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
                                 break;
                             case "koopa":
                                 e.Graphics.DrawImage(koopaImages[6], npcDrawPosition[i]);
-                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
                                 break;
                             case "peach":
                                 e.Graphics.DrawImage(peachImages[6], npcDrawPosition[i]);
-                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
                                 break;
                             case "yoshi":
                                 e.Graphics.DrawImage(yoshiImages[6], npcDrawPosition[i]);
-                                //e.Graphics.FillRectangle(blackBrush, npcDrawPosition[i]);
                                 break;
                         }
                     }
@@ -800,6 +868,16 @@ namespace Mariokart
             }
             else if (state == "select character")
             {
+                titleLabel.Visible = true;
+                titleLabel.Text = "Select Your Character";
+
+                playButton.Visible = false;
+                playButton.Enabled = false;
+                exitButton.Visible = false;
+                exitButton.Enabled = false;
+
+                e.Graphics.DrawImage(Properties.Resources.MarioKartBackgroundImage, 0, 0, Width, Height);
+
                 marioButton.Visible = true;
                 bowserButton.Visible = true;
                 koopaButton.Visible = true;
@@ -828,14 +906,50 @@ namespace Mariokart
             }
             else if (state == "leaderboard")
             {
-                //e.Graphics.DrawString($"{characterSelected}: " + playerStopwatch.Elapsed.ToString(@"m\:ss"), drawFont, redBrush, 250, 100);
+                titleLabel.Visible = true;
+                titleLabel.Text = "Standings";
+
+                leaderboardLabel.Visible = true;
+
+                e.Graphics.DrawImage(Properties.Resources.MarioKartBackgroundImage, 0, 0, Width, Height);
+
+                nextButton.Visible = true;
+                nextButton.Enabled = true;
+
                 int position = 1;
-                int height = 50;
+                string characterName = "";
                 for (int i = 0; i < leaderboard.Count; i++)
                 {
-                    e.Graphics.DrawString($"{position}.       {leaderboard[i]}", drawFont, redBrush, 250, height);
+                    switch (leaderboard[i])
+                    {
+                        case "bowser":
+                            characterName = "Bowser";
+                            break;
+                        case "mario":
+                            characterName = "Mario";
+                            break;
+                        case "luigi":
+                            characterName = "Luigi";
+                            break;
+                        case "toad":
+                            characterName = "Toad";
+                            break;
+                        case "donkey":
+                            characterName = "Donkey Kong";
+                            break;
+                        case "koopa":
+                            characterName = "Koopa Troopa";
+                            break;
+                        case "peach":
+                            characterName = "Princess Peach";
+                            break;
+                        case "yoshi":
+                            characterName = "Yoshi";
+                            break;
+                    }
+
+                    leaderboardLabel.Text += $"{position}. {characterName}\n";
                     position++;
-                    height += 70;
                 }
             }
         }
@@ -870,11 +984,6 @@ namespace Mariokart
         {
             
             distanceDriven+=distancePerW;
-            //grass.Y += distancePerW;
-            if(grass.Y > 0)
-            {
-                grass.Y = 0 - this.Height;
-            }
 
             if (wDown == true && driveSpeed < maxSpeed)
             {
@@ -932,7 +1041,7 @@ namespace Mariokart
                     }
                     if (driftAmount <= 10)
                     {
-                        driftAmount *= 1.1f;
+                        driftAmount *= 1.5f;
                     }
                 }
 
@@ -1010,7 +1119,7 @@ namespace Mariokart
 
                     if (driftAmount >= -10)
                     {
-                        driftAmount *= 1.1f;
+                        driftAmount *= 1.5f;
                     }
                 }
 
@@ -1394,6 +1503,9 @@ namespace Mariokart
 
         public void StartTheGame()
         {
+            coconutMall.Play();
+            mainMenu.Stop();
+
             gameTimer.Enabled = true;
 
             trackPoints.Clear();
@@ -1434,6 +1546,7 @@ namespace Mariokart
             donkeyButton.Enabled = false;
             toadButton.Enabled = false;
 
+            powerUpCubes.Clear();
             npcDistance.Clear();
             npcName.Clear();
             npcSpeed.Clear();
@@ -1481,6 +1594,52 @@ namespace Mariokart
             startLine[1] = new PointF(roadPoints[400].X, roadPoints[400].Y);
             startLine[2] = new PointF(roadPoints[roadPoints.Count - 400].X, roadPoints[roadPoints.Count - 400].Y);
             startLine[3] = new PointF(roadPoints[roadPoints.Count - 300].X, roadPoints[roadPoints.Count - 300].Y);
+        }
+
+        public void MakePowerUps()
+        {
+            //powerUpCubes.Add(new Rectangle())
+        }
+
+        private void nextButton_Click(object sender, EventArgs e)
+        {
+            results.Stop();
+            mainMenu.Play();
+            
+            state = "main menu";
+            Refresh();
+        }
+
+        private void playButton_Click(object sender, EventArgs e)
+        {
+                state = "select character";
+                Refresh();
+        }
+
+        private void exitButton_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void mainMenuMedia_MediaEnded(object sender, EventArgs e)
+        {
+            mainMenu.Stop();
+            mainMenu.Play();
+        }
+        private void coconutMallMedia_MediaEnded(object sender, EventArgs e)
+        {
+            coconutMall.Stop();
+            coconutMall.Play();
+        }
+        private void resultsMedia_MediaEnded(object sender, EventArgs e)
+        {
+            results.Stop();
+            results.Play();
+        }
+        private void finalLapMedia_MediaEnded(object sender, EventArgs e)
+        {
+            finalLap.Stop();
+            finalLap.Play();
         }
     }
 }

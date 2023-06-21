@@ -291,6 +291,26 @@ namespace Mariokart.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Coconut_Mall {
+            get {
+                object obj = ResourceManager.GetObject("Coconut_Mall", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Coconut_Mall__Final_Lap_ {
+            get {
+                object obj = ResourceManager.GetObject("Coconut_Mall__Final_Lap_", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap donkey__1_ {
@@ -1011,6 +1031,16 @@ namespace Mariokart.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Main_Menu {
+            get {
+                object obj = ResourceManager.GetObject("Main_Menu", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap mario__1_ {
@@ -1373,6 +1403,16 @@ namespace Mariokart.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap MarioKartBackgroundImage {
+            get {
+                object obj = ResourceManager.GetObject("MarioKartBackgroundImage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap peach__1_ {
             get {
                 object obj = ResourceManager.GetObject("peach__1_", resourceCulture);
@@ -1596,6 +1636,86 @@ namespace Mariokart.Properties {
         internal static System.Drawing.Bitmap peach__9_ {
             get {
                 object obj = ResourceManager.GetObject("peach__9_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap powerups__1_ {
+            get {
+                object obj = ResourceManager.GetObject("powerups__1_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap powerups__2_ {
+            get {
+                object obj = ResourceManager.GetObject("powerups__2_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap powerups__3_ {
+            get {
+                object obj = ResourceManager.GetObject("powerups__3_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap powerups__4_ {
+            get {
+                object obj = ResourceManager.GetObject("powerups__4_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap powerups__5_ {
+            get {
+                object obj = ResourceManager.GetObject("powerups__5_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap powerups__6_ {
+            get {
+                object obj = ResourceManager.GetObject("powerups__6_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap powerups__7_ {
+            get {
+                object obj = ResourceManager.GetObject("powerups__7_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap powerups__8_ {
+            get {
+                object obj = ResourceManager.GetObject("powerups__8_", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1847,6 +1967,16 @@ namespace Mariokart.Properties {
             get {
                 object obj = ResourceManager.GetObject("toad__9_", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Victory___Winning_Results {
+            get {
+                object obj = ResourceManager.GetObject("Victory___Winning_Results", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         

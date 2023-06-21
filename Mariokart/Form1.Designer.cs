@@ -39,7 +39,11 @@
             this.peachButton = new System.Windows.Forms.Button();
             this.koopaButton = new System.Windows.Forms.Button();
             this.hoverTimer = new System.Windows.Forms.Timer(this.components);
-            this.label1 = new System.Windows.Forms.Label();
+            this.titleLabel = new System.Windows.Forms.Label();
+            this.exitButton = new System.Windows.Forms.Button();
+            this.playButton = new System.Windows.Forms.Button();
+            this.nextButton = new System.Windows.Forms.Button();
+            this.leaderboardLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // gameTimer
@@ -156,14 +160,73 @@
             // 
             this.hoverTimer.Tick += new System.EventHandler(this.hoverTimer_Tick);
             // 
-            // label1
+            // titleLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(171, 70);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 16);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "label1";
+            this.titleLabel.BackColor = System.Drawing.Color.Black;
+            this.titleLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.titleLabel.Font = new System.Drawing.Font("Comic Sans MS", 28.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.titleLabel.ForeColor = System.Drawing.SystemColors.ActiveBorder;
+            this.titleLabel.Location = new System.Drawing.Point(204, 49);
+            this.titleLabel.Name = "titleLabel";
+            this.titleLabel.Size = new System.Drawing.Size(769, 71);
+            this.titleLabel.TabIndex = 11;
+            this.titleLabel.Text = "Racing Karts and Also Mario";
+            this.titleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // exitButton
+            // 
+            this.exitButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.exitButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.exitButton.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.exitButton.Location = new System.Drawing.Point(272, 541);
+            this.exitButton.Name = "exitButton";
+            this.exitButton.Size = new System.Drawing.Size(200, 122);
+            this.exitButton.TabIndex = 13;
+            this.exitButton.Text = "Exit";
+            this.exitButton.UseVisualStyleBackColor = true;
+            this.exitButton.Visible = false;
+            this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
+            // 
+            // playButton
+            // 
+            this.playButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.playButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.playButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.playButton.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.playButton.Location = new System.Drawing.Point(716, 541);
+            this.playButton.Name = "playButton";
+            this.playButton.Size = new System.Drawing.Size(200, 122);
+            this.playButton.TabIndex = 14;
+            this.playButton.Text = "Play";
+            this.playButton.UseVisualStyleBackColor = true;
+            this.playButton.Visible = false;
+            this.playButton.Click += new System.EventHandler(this.playButton_Click);
+            // 
+            // nextButton
+            // 
+            this.nextButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.nextButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.nextButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.nextButton.Font = new System.Drawing.Font("Comic Sans MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nextButton.Location = new System.Drawing.Point(951, 606);
+            this.nextButton.Name = "nextButton";
+            this.nextButton.Size = new System.Drawing.Size(200, 122);
+            this.nextButton.TabIndex = 15;
+            this.nextButton.Text = "Next";
+            this.nextButton.UseVisualStyleBackColor = true;
+            this.nextButton.Visible = false;
+            this.nextButton.Click += new System.EventHandler(this.nextButton_Click);
+            // 
+            // leaderboardLabel
+            // 
+            this.leaderboardLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.leaderboardLabel.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.leaderboardLabel.Location = new System.Drawing.Point(204, 138);
+            this.leaderboardLabel.Name = "leaderboardLabel";
+            this.leaderboardLabel.Size = new System.Drawing.Size(769, 452);
+            this.leaderboardLabel.TabIndex = 16;
+            this.leaderboardLabel.Visible = false;
             // 
             // Form1
             // 
@@ -171,7 +234,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1182, 753);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.nextButton);
+            this.Controls.Add(this.playButton);
+            this.Controls.Add(this.exitButton);
+            this.Controls.Add(this.titleLabel);
             this.Controls.Add(this.donkeyButton);
             this.Controls.Add(this.toadButton);
             this.Controls.Add(this.peachButton);
@@ -180,6 +246,7 @@
             this.Controls.Add(this.yoshiButton);
             this.Controls.Add(this.marioButton);
             this.Controls.Add(this.bowserButton);
+            this.Controls.Add(this.leaderboardLabel);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
@@ -189,7 +256,6 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -205,7 +271,11 @@
         private System.Windows.Forms.Button peachButton;
         private System.Windows.Forms.Button koopaButton;
         private System.Windows.Forms.Timer hoverTimer;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label titleLabel;
+        private System.Windows.Forms.Button exitButton;
+        private System.Windows.Forms.Button playButton;
+        private System.Windows.Forms.Button nextButton;
+        private System.Windows.Forms.Label leaderboardLabel;
     }
 }
 

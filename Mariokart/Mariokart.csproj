@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,6 +45,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Form1.cs">
@@ -1012,6 +1014,53 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\skyImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\powerups %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\powerups %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\powerups %283%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\powerups %284%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\powerups %285%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\powerups %286%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\powerups %287%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\powerups %288%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MarioKartBackgroundImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Main Menu.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Coconut Mall.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Coconut Mall %28Final Lap%29.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Victory &amp; Winning Results.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
