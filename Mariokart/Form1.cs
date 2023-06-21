@@ -32,8 +32,6 @@ namespace Mariokart
 
         int counter = 0;
 
-        Font drawFont = new Font("Arial", 50, FontStyle.Bold);
-        SolidBrush redBrush = new SolidBrush(Color.Red);
         SolidBrush blueBrush = new SolidBrush(Color.Blue);
         TextureBrush grassBrush;
         SolidBrush greenBrush = new SolidBrush(Color.Green);
@@ -41,9 +39,6 @@ namespace Mariokart
         SolidBrush darkGrayBrush = new SolidBrush(Color.DarkGray);
         SolidBrush blackBrush = new SolidBrush(Color.Black);
         TextureBrush roadBrush;
-        Pen roadPen = new Pen(Color.Gray, 1);
-        Pen blackPen = new Pen(Color.Black, 1);
-        Pen whitePen = new Pen(Color.White, 1);
 
         bool wDown = false;
         bool aDown = false;
@@ -127,7 +122,6 @@ namespace Mariokart
         System.Windows.Media.MediaPlayer finalLap = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer mainMenu = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer results = new System.Windows.Media.MediaPlayer();
-        string song = "main menu";
 
         public Form1()
         {
@@ -693,14 +687,14 @@ namespace Mariokart
                         driveSpeed = 0;
                         distancePerW = 0;
                     }
-                    ////else if (npcDrawPosition[i].Y > player.Y && player.X > npcDrawPosition[i].X - npcDrawPosition[i].Width / 2 && player.X < npcDrawPosition[i].X + npcDrawPosition[i].Width * 1.5)
-                    ////{
-                    ////    Rectangle temp = npcDrawPosition[i];
-                    ////    temp.Y = player.Y + player.Height;
-                    ////    npcDrawPosition[i] = temp;
-                    ////    driveSpeed++;
-                    ////    distancePerW++;
-                    ////}
+                    //else if (npcDrawPosition[i].Y > player.Y && player.X > npcDrawPosition[i].X - npcDrawPosition[i].Width / 2 && player.X < npcDrawPosition[i].X + npcDrawPosition[i].Width * 1.5)
+                    //{
+                    //    Rectangle temp = npcDrawPosition[i];
+                    //    temp.Y = player.Y + player.Height;
+                    //    npcDrawPosition[i] = temp;
+                    //    driveSpeed++;
+                    //    distancePerW++;
+                    //}
                     else if (npcDrawPosition[i].X < player.X)
                     {
                         Rectangle temp = npcDrawPosition[i];
@@ -771,33 +765,49 @@ namespace Mariokart
                 {
                     for (int i = 0; i < npcToDraw.Count; i++)
                     {
-                        switch (npcToDraw[i])
+                        int furthestDistance = this.Height;
+                        int rememberJ = 0;
+
+                        for (int j = 0; j < npcDrawPosition.Count; j++)
+                        {
+                            if (npcDrawPosition[j].Y < furthestDistance)
+                            {
+                                furthestDistance = npcDrawPosition[j].Y;
+                                rememberJ = j;
+                            }
+                        }
+
+                        switch (npcToDraw[rememberJ])
                         {
                             case "bowser":
-                                e.Graphics.DrawImage(bowserImages[6], npcDrawPosition[i]);
+                                e.Graphics.DrawImage(bowserImages[6], npcDrawPosition[rememberJ]);
                                 break;
                             case "mario":
-                                e.Graphics.DrawImage(marioImages[6], npcDrawPosition[i]);
+                                e.Graphics.DrawImage(marioImages[6], npcDrawPosition[rememberJ]);
                                 break;
                             case "luigi":
-                                e.Graphics.DrawImage(luigiImages[6], npcDrawPosition[i]);
+                                e.Graphics.DrawImage(luigiImages[6], npcDrawPosition[rememberJ]);
                                 break;
                             case "toad":
-                                e.Graphics.DrawImage(toadImages[6], npcDrawPosition[i]);
+                                e.Graphics.DrawImage(toadImages[6], npcDrawPosition[rememberJ]);
                                 break;
                             case "donkey":
-                                e.Graphics.DrawImage(donkeyImages[6], npcDrawPosition[i]);
+                                e.Graphics.DrawImage(donkeyImages[6], npcDrawPosition[rememberJ]);
                                 break;
                             case "koopa":
-                                e.Graphics.DrawImage(koopaImages[6], npcDrawPosition[i]);
+                                e.Graphics.DrawImage(koopaImages[6], npcDrawPosition[rememberJ]);
                                 break;
                             case "peach":
-                                e.Graphics.DrawImage(peachImages[6], npcDrawPosition[i]);
+                                e.Graphics.DrawImage(peachImages[6], npcDrawPosition[rememberJ]);
                                 break;
                             case "yoshi":
-                                e.Graphics.DrawImage(yoshiImages[6], npcDrawPosition[i]);
+                                e.Graphics.DrawImage(yoshiImages[6], npcDrawPosition[rememberJ]);
                                 break;
                         }
+                        npcToDraw.RemoveAt(rememberJ);
+                        npcDrawPosition.RemoveAt(rememberJ);
+                        npcToDraw.Add(null);
+                        npcDrawPosition.Add(new Rectangle (0, this.Height, 0, 0));
                     }
                 }
                 npcToDraw.Clear();
@@ -1020,7 +1030,7 @@ namespace Mariokart
             {
                 if (roadPoints[roadPoints.Count/2].X <= this.Width * 2)
                 {
-                    float moveAmount = 0.1f;
+                    float moveAmount = 0.01f;
                     for (int i = 0; i <= roadPoints.Count / 2; i++)
                     {
                         PointF point = roadPoints[i];
@@ -1030,7 +1040,7 @@ namespace Mariokart
                         moveAmount *= 1.01f;
                     }
 
-                    moveAmount = 0.1f;
+                    moveAmount = 0.01f;
                     for (int i = roadPoints.Count - 1; i >= roadPoints.Count/2; i--)
                     {
                         PointF point = roadPoints[i];
@@ -1041,7 +1051,7 @@ namespace Mariokart
                     }
                     if (driftAmount <= 10)
                     {
-                        driftAmount *= 1.5f;
+                        driftAmount *= 1.25f;
                     }
                 }
 
@@ -1096,7 +1106,7 @@ namespace Mariokart
             {
                 if (roadPoints[(roadPoints.Count-1)/2].X >= -this.Width)
                 {
-                    float moveAmount = -0.1f;
+                    float moveAmount = -0.01f;
 
                     for (int i = 0; i <= roadPoints.Count / 2; i++)
                     {
@@ -1107,7 +1117,7 @@ namespace Mariokart
                         moveAmount *= 1.01f;
                     }
 
-                    moveAmount = -0.1f;
+                    moveAmount = -0.01f;
                     for (int i = roadPoints.Count - 1; i >= roadPoints.Count/2; i--)
                     {
                         PointF point = roadPoints[i];
@@ -1119,7 +1129,7 @@ namespace Mariokart
 
                     if (driftAmount >= -10)
                     {
-                        driftAmount *= 1.5f;
+                        driftAmount *= 1.25f;
                     }
                 }
 

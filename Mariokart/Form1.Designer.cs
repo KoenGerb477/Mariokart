@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.gameTimer = new System.Windows.Forms.Timer(this.components);
             this.bowserButton = new System.Windows.Forms.Button();
             this.marioButton = new System.Windows.Forms.Button();
@@ -54,6 +55,7 @@
             // bowserButton
             // 
             this.bowserButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.bowserButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.bowserButton.Location = new System.Drawing.Point(623, 154);
             this.bowserButton.Name = "bowserButton";
             this.bowserButton.Size = new System.Drawing.Size(200, 200);
@@ -68,6 +70,7 @@
             // 
             this.marioButton.BackColor = System.Drawing.Color.Transparent;
             this.marioButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.marioButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.marioButton.Location = new System.Drawing.Point(78, 154);
             this.marioButton.Name = "marioButton";
             this.marioButton.Size = new System.Drawing.Size(200, 200);
@@ -81,6 +84,7 @@
             // luigiButton
             // 
             this.luigiButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.luigiButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.luigiButton.Location = new System.Drawing.Point(78, 390);
             this.luigiButton.Name = "luigiButton";
             this.luigiButton.Size = new System.Drawing.Size(200, 200);
@@ -94,6 +98,7 @@
             // yoshiButton
             // 
             this.yoshiButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.yoshiButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.yoshiButton.Location = new System.Drawing.Point(334, 390);
             this.yoshiButton.Name = "yoshiButton";
             this.yoshiButton.Size = new System.Drawing.Size(200, 200);
@@ -107,6 +112,7 @@
             // donkeyButton
             // 
             this.donkeyButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.donkeyButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.donkeyButton.Location = new System.Drawing.Point(623, 390);
             this.donkeyButton.Name = "donkeyButton";
             this.donkeyButton.Size = new System.Drawing.Size(200, 200);
@@ -120,6 +126,7 @@
             // toadButton
             // 
             this.toadButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.toadButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.toadButton.Location = new System.Drawing.Point(908, 390);
             this.toadButton.Name = "toadButton";
             this.toadButton.Size = new System.Drawing.Size(200, 200);
@@ -133,6 +140,7 @@
             // peachButton
             // 
             this.peachButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.peachButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.peachButton.Location = new System.Drawing.Point(334, 154);
             this.peachButton.Name = "peachButton";
             this.peachButton.Size = new System.Drawing.Size(200, 200);
@@ -146,6 +154,7 @@
             // koopaButton
             // 
             this.koopaButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.koopaButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.koopaButton.Location = new System.Drawing.Point(908, 154);
             this.koopaButton.Name = "koopaButton";
             this.koopaButton.Size = new System.Drawing.Size(200, 200);
@@ -249,6 +258,7 @@
             this.Controls.Add(this.leaderboardLabel);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
