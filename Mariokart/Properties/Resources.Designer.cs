@@ -61,6 +61,15 @@ namespace Mariokart.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream _170248__enduringautomotive__main_engine {
+            get {
+                return ResourceManager.GetStream("_170248__enduringautomotive__main_engine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap bowser__1_ {
@@ -1411,6 +1420,15 @@ namespace Mariokart.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream menuselect {
+            get {
+                return ResourceManager.GetStream("menuselect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap peach__1_ {
@@ -1737,6 +1755,15 @@ namespace Mariokart.Properties {
             get {
                 object obj = ResourceManager.GetObject("skyImage", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream thud1 {
+            get {
+                return ResourceManager.GetStream("thud1", resourceCulture);
             }
         }
         

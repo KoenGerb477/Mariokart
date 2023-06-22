@@ -11,12 +11,15 @@ using System.Windows.Forms.VisualStyles;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using System.Media;
 using System.IO;
 
 namespace Mariokart
 {
     public partial class Form1 : Form
     {
+        int engineTimer = 25;
+
         List<Point> trackPoints = new List<Point>();
         List<PointF> roadPoints = new List<PointF>();
 
@@ -70,6 +73,8 @@ namespace Mariokart
         List<float>npcDistance = new List<float>();
         List<string>npcName =  new List<string>();
         List<int> npcSpeed = new List<int>();
+        List<int> npcX = new List<int>();
+        List<int> rightOrLeftMovement = new List<int>();
         List<int> npcBaseLineSpeed = new List<int>();
         List<string> npcToDraw = new List<string>();
         List<Rectangle> npcDrawPosition= new List<Rectangle>();
@@ -123,6 +128,10 @@ namespace Mariokart
         System.Windows.Media.MediaPlayer mainMenu = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer results = new System.Windows.Media.MediaPlayer();
 
+        System.Windows.Media.MediaPlayer engineSound = new System.Windows.Media.MediaPlayer(); 
+        System.Windows.Media.MediaPlayer thudSound = new System.Windows.Media.MediaPlayer(); 
+        System.Windows.Media.MediaPlayer clickSound = new System.Windows.Media.MediaPlayer();
+
         public Form1()
         {
             InitializeComponent();
@@ -140,6 +149,10 @@ namespace Mariokart
 
             results.Open(new Uri(Application.StartupPath + "/Resources/Victory & Winning Results.mp3"));
             results.MediaEnded += new EventHandler(resultsMedia_MediaEnded);
+
+            engineSound.Open(new Uri(Application.StartupPath + "/Resources/170248__enduringautomotive__main-engine-[AudioTrimmer.com].wav"));
+            thudSound.Open(new Uri(Application.StartupPath + "/Resources/thud1.wav"));
+            clickSound.Open(new Uri(Application.StartupPath + "/Resources/menuselect.wav"));
 
             player = new Rectangle((this.Width / 2) - playerWidth / 2, this.Height - playerHeight * 3 / 2, playerWidth, playerHeight);
 
@@ -391,6 +404,21 @@ namespace Mariokart
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
+            if ((wDown == true || sDown == true) && engineTimer < 0)
+            {
+                engineTimer = 20;
+                engineSound.Play();
+            }
+            else if (engineTimer < 5)
+            {
+                engineTimer--;
+                engineSound.Stop();
+            }
+            else
+            {
+                engineTimer--;
+            }
+
             //move player
             if (wDown == true || driveSpeed > 0)
             {
@@ -646,7 +674,36 @@ namespace Mariokart
                             }
                         }
                     }
-                    int x = (Convert.ToInt32(pointR.X + pointL.X) / 2) - playerWidth / 2;
+
+                    int random;
+                    if (rightOrLeftMovement[i] == -1)
+                    {
+                        random = randGen.Next(0, 6);
+
+                        if (random + npcX[i] + ((pointL.X + pointR.X)/2) > pointR.X - size)
+                        {
+                            random = -random;
+                            rightOrLeftMovement[i] *= -1;
+
+                            npcX[i] = Convert.ToInt32(pointR.X - size) - Convert.ToInt32((pointL.X + pointR.X)/2);
+                        }
+                    }
+                    else
+                    {
+                        random = randGen.Next(-5, 1);
+
+                        if (random + npcX[i] + ((pointL.X + pointR.X)/2)< pointL.X)
+                        {
+                            random = -random;
+                            rightOrLeftMovement[i] *= -1;
+
+                            npcX[i] = - (Convert.ToInt32((pointL.X + pointR.X)/2) - Convert.ToInt32(pointL.X));
+                        }
+                    }
+
+                    npcX[i] += random;
+
+                    int x = Convert.ToInt32(pointL.X + pointR.X)/2 + npcX[i];//(Convert.ToInt32((pointR.X + pointL.X) / 2) + size/2) - playerWidth / 2;
 
                     Rectangle npcPosition = new Rectangle(x, y, size, size);
                     npcDrawPosition.Add(npcPosition);
@@ -682,31 +739,29 @@ namespace Mariokart
             {
                 if (npcDrawPosition[i].IntersectsWith(player))
                 {
-                    if (npcDrawPosition[i].Y < player.Y && player.X > npcDrawPosition[i].X - npcDrawPosition[i].Width / 2 && player.X < npcDrawPosition[i].X + npcDrawPosition[i].Width * 1.5)
+                    thudSound.Play();
+
+                    if (npcDrawPosition[i].Y < player.Y + playerHeight/2)// && player.X > npcDrawPosition[i].X - npcDrawPosition[i].Width / 2 && player.X < npcDrawPosition[i].X + npcDrawPosition[i].Width * 1.5)
                     {
                         driveSpeed = 0;
                         distancePerW = 0;
                     }
-                    //else if (npcDrawPosition[i].Y > player.Y && player.X > npcDrawPosition[i].X - npcDrawPosition[i].Width / 2 && player.X < npcDrawPosition[i].X + npcDrawPosition[i].Width * 1.5)
-                    //{
-                    //    Rectangle temp = npcDrawPosition[i];
-                    //    temp.Y = player.Y + player.Height;
-                    //    npcDrawPosition[i] = temp;
-                    //    driveSpeed++;
-                    //    distancePerW++;
-                    //}
-                    else if (npcDrawPosition[i].X < player.X)
+                    else if (npcDrawPosition[i].Y > player.Y - playerHeight * 3/2) //&& player.X > npcDrawPosition[i].X - npcDrawPosition[i].Width / 2 && player.X < npcDrawPosition[i].X + npcDrawPosition[i].Width * 1.5)
+                    {
+                        npcSpeed[i] = 0;
+                    }
+                    if (npcDrawPosition[i].X - npcDrawPosition[i].Width / 2 < player.X && npcDrawPosition[i].Y < player.Y + playerHeight/4 && npcDrawPosition[i].Y > player.Y + playerHeight* 3/4)
                     {
                         Rectangle temp = npcDrawPosition[i];
                         temp.X = player.X - player.Width;
                         npcDrawPosition[i] = temp;
 
-                        if (turnDirection > maxTurnSpeed)
+                        if (turnDirection > -maxTurnSpeed)
                         {
                             turnDirection--;
                         }
                     }
-                    else if (npcDrawPosition[i].X > player.X)
+                    else if (npcDrawPosition[i].X + npcDrawPosition[i].Width / 2 > player.X && npcDrawPosition[i].Y < player.Y + playerHeight/4 && npcDrawPosition[i].Y > player.Y + playerHeight* 3/4)
                     {
                         Rectangle temp = npcDrawPosition[i];
                         temp.X = player.X + player.Width;
@@ -1225,6 +1280,8 @@ namespace Mariokart
 
         private void marioButton_Click(object sender, EventArgs e)
         {
+            clickSound.Play();
+
             for (int i = 0; i <= 12; i++)
             {
                 playerImage[i] = marioImages[i];
@@ -1236,6 +1293,8 @@ namespace Mariokart
 
         private void bowserButton_Click(object sender, EventArgs e)
         {
+            clickSound.Play();
+
             for (int i = 0; i <= 12; i++)
             {
                 playerImage[i] = bowserImages[i];
@@ -1247,6 +1306,8 @@ namespace Mariokart
 
         private void peachButton_Click(object sender, EventArgs e)
         {
+            clickSound.Play();
+
             for (int i = 0; i <= 12; i++)
             {
                 playerImage[i] = peachImages[i];
@@ -1258,6 +1319,8 @@ namespace Mariokart
 
         private void koopaButton_Click(object sender, EventArgs e)
         {
+            clickSound.Play();
+
             for (int i = 0; i <= 12; i++)
             {
                 playerImage[i] = koopaImages[i];
@@ -1269,6 +1332,8 @@ namespace Mariokart
 
         private void luigiButton_Click(object sender, EventArgs e)
         {
+            clickSound.Play();
+
             for (int i = 0; i <= 12; i++)
             {
                 playerImage[i] = luigiImages[i];
@@ -1280,6 +1345,8 @@ namespace Mariokart
 
         private void yoshiButton_Click(object sender, EventArgs e)
         {
+            clickSound.Play();
+
             for (int i = 0; i <= 12; i++)
             {
                 playerImage[i] = yoshiImages[i];
@@ -1291,6 +1358,8 @@ namespace Mariokart
 
         private void donkeyButton_Click(object sender, EventArgs e)
         {
+            clickSound.Play();
+
             for (int i = 0; i <= 12; i++)
             {
                 playerImage[i] = donkeyImages[i];
@@ -1302,6 +1371,8 @@ namespace Mariokart
 
         private void toadButton_Click(object sender, EventArgs e)
         {
+            clickSound.Play();
+
             for (int i = 0; i <= 12; i++)
             {
                 playerImage[i] = toadImages[i];
@@ -1319,7 +1390,6 @@ namespace Mariokart
 
         private void toadButton_MouseLeave(object sender, EventArgs e)
         {
-
             hoverTimer.Enabled = false;
             spinningToadImage = 22;
             toadButton.Refresh();
@@ -1562,6 +1632,7 @@ namespace Mariokart
             npcSpeed.Clear();
             npcToDraw.Clear();
             npcDrawPosition.Clear();
+            npcX.Clear();
 
             for (int i = 0; i < 8; i++)
             {
@@ -1591,6 +1662,21 @@ namespace Mariokart
                 npcBaseLineSpeed.Add(randGen.Next(1, 5));
                 npcSpeed.Add(npcBaseLineSpeed[i]);
             }
+            int c = 0;
+            for (int i = 0; i < npcName.Count; i++)
+            {
+                if (c % 2 == 0)
+                {
+                    npcX.Add(-250);
+                    rightOrLeftMovement.Add(-1);
+                }
+                else
+                {
+                    npcX.Add(200);
+                    rightOrLeftMovement.Add(1);
+                }
+                c++;
+            }
 
             playerStopwatch.Start();
 
@@ -1613,6 +1699,8 @@ namespace Mariokart
 
         private void nextButton_Click(object sender, EventArgs e)
         {
+            clickSound.Play();
+
             results.Stop();
             mainMenu.Play();
             
@@ -1622,12 +1710,16 @@ namespace Mariokart
 
         private void playButton_Click(object sender, EventArgs e)
         {
-                state = "select character";
-                Refresh();
+            clickSound.Play();
+
+            state = "select character";
+            Refresh();
         }
 
         private void exitButton_Click(object sender, EventArgs e)
         {
+            clickSound.Play();
+
             Application.Exit();
         }
 
