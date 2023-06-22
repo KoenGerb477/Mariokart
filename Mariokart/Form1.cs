@@ -1,4 +1,16 @@
-﻿using System;
+﻿/*
+ * 
+ * Koen Gerber
+ * ICS3U
+ * Mr T
+ * June 22, 2023
+ * 
+ * Final Summative Project
+ * Racing Karts and Also Mario
+ * Racing game based off of SNES Mariokart
+ */
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,34 +31,19 @@ namespace Mariokart
     public partial class Form1 : Form
     {
         int engineTimer = 25;
-
-        List<Point> trackPoints = new List<Point>();
-        List<PointF> roadPoints = new List<PointF>();
-
-        PointF[] startLine = new PointF[4];
+        int counter = 0;
+        int tickCounter = 0;
 
         string state = "main menu";
 
         Rectangle player = new Rectangle();
-
         Rectangle grass = new Rectangle();
-
         Rectangle playerTracker = new Rectangle();
 
-        int counter = 0;
-
-        SolidBrush blueBrush = new SolidBrush(Color.Blue);
-        TextureBrush grassBrush;
         SolidBrush greenBrush = new SolidBrush(Color.Green);
         SolidBrush grayBrush = new SolidBrush(Color.Gray);
         SolidBrush darkGrayBrush = new SolidBrush(Color.DarkGray);
         SolidBrush blackBrush = new SolidBrush(Color.Black);
-        TextureBrush roadBrush;
-
-        bool wDown = false;
-        bool aDown = false;
-        bool sDown = false;
-        bool dDown = false;
 
         const int playerWidth = 140;
         const int playerHeight = 150;
@@ -60,6 +57,11 @@ namespace Mariokart
         const float turningAcceleration = 0.5f;
         const int maxTurnSpeed = 24;
 
+        bool wDown = false;
+        bool aDown = false;
+        bool sDown = false;
+        bool dDown = false;
+
         bool startLineActive = true;
         bool turnRight = false;
         bool straightenOutFromRight = false;
@@ -69,6 +71,14 @@ namespace Mariokart
         float distanceDriven = 2;
         float totalDistance = 1;
         int distancePerW = 4;
+
+        float perspectiveAngle = 0.5f;
+        float driftAmount = 0.1f;
+        float originalTrackPosition;
+
+        List<Point> trackPoints = new List<Point>();
+        List<PointF> roadPoints = new List<PointF>();
+        PointF[] startLine = new PointF[4];
 
         List<float>npcDistance = new List<float>();
         List<string>npcName =  new List<string>();
@@ -82,33 +92,20 @@ namespace Mariokart
         List<string> leaderboard = new List<string>();
         List<string> time = new List<string>();
 
-        float perspectiveAngle = 0.5f;
-
-        float driftAmount = 0.1f;
-
-        float originalTrackPosition;
-
         int spinningMarioImage = 22;
         Image[] marioImages = new Image[23];
-
         int spinningBowserImage = 22;
         Image[] bowserImages = new Image[23];
-
         int spinningKoopaImage = 22;
         Image[] koopaImages = new Image[23];
-
         int spinningDonkeyImage = 22;
         Image[] donkeyImages = new Image[23];
-
         int spinningYoshiImage = 22;
         Image[] yoshiImages = new Image[23];
-
         int spinningToadImage = 22;
         Image[] toadImages = new Image[23];
-
         int spinningLuigiImage = 22;
         Image[] luigiImages = new Image[23];
-
         int spinningPeachImage = 22;
         Image[] peachImages = new Image[23];
 
@@ -117,12 +114,9 @@ namespace Mariokart
         string characterSelected;
 
         Stopwatch playerStopwatch = new Stopwatch();
+        Random randGen = new Random();
 
-        Random randGen =   new Random();
-
-        int tickCounter = 0;
-
-        List <Rectangle> powerUpCubes = new List<Rectangle>();
+        //List <Rectangle> powerUpCubes = new List<Rectangle>();
 
         System.Windows.Media.MediaPlayer coconutMall = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer finalLap = new System.Windows.Media.MediaPlayer();
@@ -136,8 +130,10 @@ namespace Mariokart
         public Form1()
         {
             InitializeComponent();
+            
             horizonHeight = this.Height/6;
 
+            //create all the music and make the method that if the song ends it should repeat
             coconutMall.Open(new Uri(Application.StartupPath + "/Resources/Coconut Mall.mp3"));
             coconutMall.MediaEnded += new EventHandler(coconutMallMedia_MediaEnded);
 
@@ -155,12 +151,12 @@ namespace Mariokart
             thudSound.Open(new Uri(Application.StartupPath + "/Resources/thud1.wav"));
             clickSound.Open(new Uri(Application.StartupPath + "/Resources/menuselect.wav"));
 
+            //create shapes for the grass, player, and player tracking bar
             player = new Rectangle((this.Width / 2) - playerWidth / 2, this.Height - playerHeight * 3 / 2, playerWidth, playerHeight);
-
             grass = new Rectangle(0 - this.Width, 0 - this.Height, this.Width * 2, this.Height *2);
-
             playerTracker = new Rectangle(this.Width - 50, 30, 20, this.Height - 60);
 
+            //create arrays for every character storing the sprites
             marioImages[13] = Properties.Resources.mario__7_;
             marioImages[14] = Properties.Resources.mario__6_;
             marioImages[15] = Properties.Resources.mario__5_;
@@ -360,13 +356,11 @@ namespace Mariokart
             peachImages[2] = Properties.Resources.peach__11_;
             peachImages[1] = Properties.Resources.peach__1_;
             peachImages[0] = Properties.Resources.peach__1_;
-
-            grassBrush = new TextureBrush(Properties.Resources.grassTextureFr);
-            roadBrush = new TextureBrush(Properties.Resources.RoadTexture);
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
+            //if key is pressed record it as true
             switch (e.KeyCode)
             {
                 case Keys.W:
@@ -386,6 +380,7 @@ namespace Mariokart
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
+            //when key is released, make false
             switch (e.KeyCode)
             {
                 case Keys.W:
@@ -405,6 +400,7 @@ namespace Mariokart
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
+            //make engine noise if moving forward or backward
             if ((wDown == true || sDown == true) && engineTimer < 0)
             {
                 engineTimer = 20;
@@ -420,15 +416,17 @@ namespace Mariokart
                 engineTimer--;
             }
 
-            //move player
+            //move player if key is pressed or if the car has not fully accelerated to a stop yet
             if (wDown == true || driveSpeed > 0)
             {
                 MoveForward();
             }
+            //move player backward if s is pressed
             if (sDown == true)
             {
                 MoveBackwards();
             }
+            //player tries to move forward without turning then straighten out the car
             if (wDown == true && aDown == dDown)
             {          
                 if (turnDirection > 0)
@@ -439,7 +437,7 @@ namespace Mariokart
                 {
                     turnDirection += turningAcceleration * 2;
                 }
-
+                //move sideways if turning has not fully straightened out
                 if (turnDirection > 0 && driveSpeed > 0)
                 {
                     MoveSideways(turningAcceleration);
@@ -449,6 +447,7 @@ namespace Mariokart
                     MoveSideways(-turningAcceleration);
                 }
             }
+            //change the direction of the vehicle if it is moving forward and a or d is pressed
             else
             {
                 if (aDown == true && driveSpeed > 0)
@@ -465,6 +464,7 @@ namespace Mariokart
             PointF pointL = new PointF (0,0);
             PointF pointR = new PointF(0,0);
             int c = 0;
+            //find both road points directly to the left and right of the player
             foreach (PointF roadPoint in roadPoints)
             {
                 if (roadPoint.Y == (playerHeight + player.Y))
@@ -480,7 +480,7 @@ namespace Mariokart
                     }
                 }
             }
-
+            //if player is outside these points slow down
             if (pointL.X > player.X || pointR.X < player.X + playerWidth)
             {
                 maxSpeed = 10;
@@ -491,22 +491,23 @@ namespace Mariokart
                 maxSpeed = 20;
                 distancePerW = 2;    
             }
-            
 
             //track sequence
+            //change any odd numbers to even so that each case in the switch statement eventually will happen
             if (distanceDriven % 2 != 0 && distancePerW == 2)
             {
                 distanceDriven--;
             }
             switch (distanceDriven)
             {
+                //when the distance gets to certain values the track changes
                 case 300:
                     turnRight = true;
                     break;
                 case 600:
                     straightenOutFromRight = true;
                     turnRight = false;
-                    MakePowerUps();
+                    //MakePowerUps();
                     break;
                 case 900:
                     turnLeft = true;
@@ -516,7 +517,7 @@ namespace Mariokart
                 case 1200:
                     straightenOutFromLeft = true;
                     turnLeft = false;
-                    MakePowerUps();
+                    //MakePowerUps();
                     break;
                 case 1500:
                     turnLeft = true;
@@ -526,7 +527,7 @@ namespace Mariokart
                 case 1800:
                     straightenOutFromLeft = true;
                     turnLeft = false;
-                    MakePowerUps();
+                    ///MakePowerUps();
                     break;
                 case 2100:
                     turnRight = true;
@@ -536,7 +537,7 @@ namespace Mariokart
                 case 2400:
                     straightenOutFromRight = true;
                     turnRight = false;
-                    MakePowerUps();
+                    //MakePowerUps();
                     break;
                 case 2700:
                     turnLeft = true;
@@ -546,7 +547,7 @@ namespace Mariokart
                 case 3000:
                     straightenOutFromLeft = true;
                     turnLeft = false;
-                    MakePowerUps();
+                    //MakePowerUps();
                     break;
                 case 3300:
                     turnRight = true;
@@ -556,7 +557,7 @@ namespace Mariokart
                 case 3600:
                     straightenOutFromRight = true;
                     turnRight = false;
-                    MakePowerUps();
+                    //MakePowerUps();
                     break;
                 case 3900:
                     turnRight = true;
@@ -569,6 +570,7 @@ namespace Mariokart
                     break;
                 case 4500:
                     distanceDriven = 0;
+                    //a full lap is complete so create the starting line and move it behind the horizon
                     MakeStartLine();
                     while (startLine[0].Y > horizonHeight)
                     {
@@ -588,6 +590,8 @@ namespace Mariokart
                 default: break;
             }
 
+            //counter keeps track of the laps
+            //find the total distance travelled based on the laps complete and the distance driven on the current lap
             if (counter == 0)
             {
                 totalDistance = distanceDriven;
@@ -608,12 +612,15 @@ namespace Mariokart
                 finalLap.Stop();
                 results.Play();
 
+                //add player name to the leaderboard
                 leaderboard.Add(characterSelected);
                 
+                //add players time to the time list
                 playerStopwatch.Stop();
                 time.Add(playerStopwatch.Elapsed.ToString(@"m\:ss"));
                 Int64 playerTime = playerStopwatch.ElapsedMilliseconds;
 
+                //remove any npc's that have already completed the race from the list
                 for (int i = 0; i < npcName.Count; i++)
                 {
                     if (npcName[i] == "done")
@@ -624,6 +631,7 @@ namespace Mariokart
                         i--;
                     }
                 }
+                //find the order in which the rest of the npcs will finish and record their times and names for the leaderboard
                 for (int i = 0; i < npcName.Count; i++)
                 {
                     string fastestNPC = "";
@@ -631,7 +639,7 @@ namespace Mariokart
                     int rememberJ = 0;
                     for (int j = 0; j < npcDistance.Count; j++)
                     {
-                        if (Convert.ToInt32(playerTime) + Convert.ToInt32(13500 - npcDistance[j])/npcSpeed[j] > fastestTime)
+                        if (Convert.ToInt32(playerTime) + Convert.ToInt32( - npcDistance[j])/npcSpeed[j] > fastestTime)
                         {
                             fastestTime = Convert.ToInt32(playerTime) + Convert.ToInt32(13500 - npcDistance[j])/npcSpeed[j];
                             fastestNPC = npcName[j];
@@ -655,18 +663,22 @@ namespace Mariokart
             //keep track of NPC positions
             for (int i = 0; i < npcName.Count; i++)
             {
+                //move npc
                 npcDistance[i] += npcSpeed[i];
 
+                //if npc is within a certain range of the player, they will be drawn
                 if (npcDistance[i] - totalDistance > -50 && npcDistance[i] - totalDistance < 200)
                 {
                     npcToDraw.Add(npcName[i]);
 
+                    //find height and size of npc based on distance in relation to player distance
                     int y = Convert.ToInt32(this.Height - ((this.Height-playerHeight)*((npcDistance[i]-totalDistance)/200)));
                     int size = Convert.ToInt32((y + playerHeight)/((player.Y - horizonHeight)/(playerHeight/2)));
 
                     pointL = new PointF(0, 0);
                     pointR = new PointF(0, 0);
                     c = 0;
+                    //find the points on the road directly to the left and right of the npc
                     foreach (PointF roadPoint in roadPoints)
                     {
                         if (Convert.ToInt32(roadPoint.Y) == y)
@@ -683,6 +695,7 @@ namespace Mariokart
                         }
                     }
 
+                    //move npc in the same direction they are currently moving in by a random distance, unless they are going off the track
                     int random;
                     if (rightOrLeftMovement[i] == -1)
                     {
@@ -720,12 +733,15 @@ namespace Mariokart
                 //make random npc speed
                 if (tickCounter % 100 == 0)
                 {
+                    //speed is a value close to the baseline speed of each npc
                     npcSpeed[i] = randGen.Next(npcBaseLineSpeed[i] - 3, npcBaseLineSpeed[i] +3);
+                    //if speed is 0 make it 1 instead
                     if (npcSpeed[i] < 1)
                     {
                         npcSpeed[i] = 1;
                     }
                 }
+                //when npc gets too far in front or behind the player increase or decrease their baseline speed
                 if ((npcDistance[i] - totalDistance) % 100 == 0 && npcDistance[i] - totalDistance > 0)
                 {
                     npcBaseLineSpeed[i]--;
@@ -751,14 +767,17 @@ namespace Mariokart
                 {
                     thudSound.Play();
 
+                    //if player driving into npc slow down player
                     if (npcDrawPosition[i].Y < player.Y + playerHeight/2)                    {
                         driveSpeed = 0;
                         distancePerW = 0;
                     }
+                    //if npc driving into player, slow down npc
                     else if (npcDrawPosition[i].Y > player.Y - playerHeight * 3/2) 
                     {
                         npcSpeed[i] = 0;
                     }
+                    //push npc sideways if they are colliding from the sides, and also turn the player in the opposite direction
                     if (npcDrawPosition[i].X - npcDrawPosition[i].Width / 2 < player.X && npcDrawPosition[i].Y < player.Y + playerHeight/4 && npcDrawPosition[i].Y > player.Y + playerHeight* 3/4)
                     {
                         Rectangle temp = npcDrawPosition[i];
@@ -789,8 +808,10 @@ namespace Mariokart
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
+            //paint whichever screen is being used
             if (state == "main menu")
             {
+                //draw menu screen
                 e.Graphics.DrawImage(Properties.Resources.MarioKartBackgroundImage, 0, 0, Width, Height);
 
                 titleLabel.Visible = true;
@@ -810,8 +831,10 @@ namespace Mariokart
             {
                 titleLabel.Visible = false;
 
+                //grass
                 e.Graphics.FillRectangle(greenBrush, grass);
 
+                //road
                 PointF[] roadArray = new PointF[roadPoints.Count];
                 for (int i = 0; i < roadPoints.Count; i++)
                 {
@@ -819,15 +842,19 @@ namespace Mariokart
                 }
                 e.Graphics.FillPolygon(grayBrush, roadArray);
 
+                //if startline is currently nearby the player draw it
                 if (startLineActive == true)
                 {
                     e.Graphics.FillPolygon(blackBrush, startLine);
                 }
 
+                //sky
                 e.Graphics.DrawImage(Properties.Resources.skyImage, 0, 0, this.Width*2, horizonHeight);
 
+                //if npcs are nearby player draw them
                 if (npcToDraw.Count > 0)
                 {
+                    //draw npcs in order of who is furthest from the player to who is closest to the player
                     for (int i = 0; i < npcToDraw.Count; i++)
                     {
                         int furthestDistance = this.Height;
@@ -878,10 +905,13 @@ namespace Mariokart
                 npcToDraw.Clear();
                 npcDrawPosition.Clear();
 
+                //player with correct sprite based on turning 
                 e.Graphics.DrawImage(playerImage[Convert.ToInt16((turnDirection / 4) + 6)], player);
 
+                //tracking bar
                 e.Graphics.FillRectangle(darkGrayBrush, playerTracker);
                 
+                //character trackers on the tracking bar
                 for (int i = 0; i < npcName.Count; i++)
                 {
                     switch (npcName[i])
@@ -970,6 +1000,7 @@ namespace Mariokart
                 donkeyButton.Enabled = true;
                 toadButton.Enabled = true;
 
+                //images spin when hovered over
                 toadButton.Image = toadImages[spinningToadImage];
                 luigiButton.Image = luigiImages[spinningLuigiImage];
                 donkeyButton.Image = donkeyImages[spinningDonkeyImage];
@@ -992,6 +1023,7 @@ namespace Mariokart
                 nextButton.Visible = true;
                 nextButton.Enabled = true;
 
+                //draw leaderboard
                 int position = 1;
                 string characterName = "";
                 for (int i = 0; i < leaderboard.Count; i++)
@@ -1033,6 +1065,7 @@ namespace Mariokart
 
         public void MakeTrack()
         {
+            //create all the road points
             gameTimer.Enabled = true;
 
             float lastX = 0;
@@ -1059,9 +1092,10 @@ namespace Mariokart
 
         public void MoveForward()
         {
-            
+            //move player
             distanceDriven+=distancePerW;
 
+            //change drive speed based on if acceleratint
             if (wDown == true && driveSpeed < maxSpeed)
             {
                 driveSpeed += driveAcceleration;
@@ -1075,6 +1109,7 @@ namespace Mariokart
                 driveSpeed -= driveAcceleration;
             }
 
+            //if start line on screen move it 
             if (startLineActive == true)
             {
                 startLine[0].Y+=driveSpeed * 1.5f;
@@ -1093,6 +1128,7 @@ namespace Mariokart
                 }
             }
 
+            //curve the track to the right
             if (turnRight == true)
             {
                 if (roadPoints[roadPoints.Count/2].X <= this.Width * 2)
@@ -1122,6 +1158,7 @@ namespace Mariokart
                     }
                 }
 
+                //pull player to the left
                 for (int i = 0; i < roadPoints.Count; i++)
                 {
                     PointF point = roadPoints[i];
@@ -1130,12 +1167,11 @@ namespace Mariokart
                 }
             }
 
+            //straighten out the track
             if (straightenOutFromRight == true)
             {
-
                 if (roadPoints[(roadPoints.Count-1)/2].X - roadPoints[0].X >= originalTrackPosition)
                 {
-
                     float moveAmount = -0.1f;
 
                     for (int i = 0; i <= roadPoints.Count / 2; i++)
@@ -1169,6 +1205,7 @@ namespace Mariokart
                 }
             }
 
+            //curve track to the left
             if (turnLeft == true)
             {
                 if (roadPoints[(roadPoints.Count-1)/2].X >= -this.Width)
@@ -1200,6 +1237,7 @@ namespace Mariokart
                     }
                 }
 
+                //pull player to the right
                 for (int i = 0; i < roadPoints.Count; i++)
                 {
                     PointF point = roadPoints[i];
@@ -1208,6 +1246,7 @@ namespace Mariokart
                 }
             }
 
+            //straighten out track
             if (straightenOutFromLeft == true)
             {
 
@@ -1251,11 +1290,12 @@ namespace Mariokart
 
         public void MoveSideways(float turningAcceleration)
         {
+            //turn the player unless already at max turn speed + or -
             if (turnDirection < maxTurnSpeed && turnDirection > -maxTurnSpeed)
             {
                 turnDirection += turningAcceleration;
             }
-
+            //move track left or right when turning
             for (int i = 0; i < roadPoints.Count; i++)
             {
                 PointF point = roadPoints[i];
@@ -1263,6 +1303,7 @@ namespace Mariokart
                 roadPoints[i] = point;
             }
 
+            //if startline is active move it sideways
             if (startLineActive == true)
             {
                 startLine[0].X += turnDirection;
@@ -1274,6 +1315,7 @@ namespace Mariokart
 
         public void MoveBackwards()
         {
+            //move player back
             distanceDriven--;
 
             if (startLineActive == true)
@@ -1290,6 +1332,7 @@ namespace Mariokart
             }
         }
 
+        //when the following buttons are clicked a character is selected and player images are set as that character
         private void marioButton_Click(object sender, EventArgs e)
         {
             clickSound.Play();
@@ -1394,6 +1437,7 @@ namespace Mariokart
             StartTheGame();
         }
 
+        //the following track if the cursor is hovering over a character button and which one
         private void toadButton_MouseHover(object sender, EventArgs e)
         {
             hoverTimer.Enabled = true;
@@ -1498,6 +1542,7 @@ namespace Mariokart
             koopaButton.Refresh();
         }
 
+        //if hovering over a character button, make the character image spin
         private void hoverTimer_Tick(object sender, EventArgs e)
         {
             switch (characterSelected)
@@ -1598,14 +1643,12 @@ namespace Mariokart
             coconutMall.Play();
             mainMenu.Stop();
 
+            //start game
             gameTimer.Enabled = true;
-
-            trackPoints.Clear();
-            roadPoints.Clear();
-
-            counter = 0;
-
             state = "play game";
+
+            //reset all variables
+            counter = 0;
 
             driveSpeed = 0;
             turnDirection = 0;
@@ -1638,20 +1681,24 @@ namespace Mariokart
             donkeyButton.Enabled = false;
             toadButton.Enabled = false;
 
-            powerUpCubes.Clear();
+            //clear all lists
+            //powerUpCubes.Clear();
             npcDistance.Clear();
             npcName.Clear();
             npcSpeed.Clear();
             npcToDraw.Clear();
             npcDrawPosition.Clear();
             npcX.Clear();
+            trackPoints.Clear();
+            roadPoints.Clear();
 
+            //setting up npcs
             for (int i = 0; i < 8; i++)
             {
-                //set distances to 0
+                //set distances to 1
                 npcDistance.Add(1);
             }
-            //choose random characters for npc's
+            //give them names
             npcName.Add("bowser");
             npcName.Add("mario");
             npcName.Add("luigi");
@@ -1661,6 +1708,7 @@ namespace Mariokart
             npcName.Add("peach");
             npcName.Add("donkey");
 
+            //remove the npc with the same character as the player
             for (int j = 0; j < npcName.Count; j++)
             {
                 if (npcName[j] == characterSelected)
@@ -1669,11 +1717,13 @@ namespace Mariokart
                     npcDistance.RemoveAt(j);
                 }
             }
+            //give them random baseline speeds
             for (int i = 0; i < npcName.Count; i++)
             {
                 npcBaseLineSpeed.Add(randGen.Next(1, 5));
                 npcSpeed.Add(npcBaseLineSpeed[i]);
             }
+            //make half of them start to the left and half to the right
             int c = 0;
             for (int i = 0; i < npcName.Count; i++)
             {
@@ -1690,27 +1740,29 @@ namespace Mariokart
                 c++;
             }
 
+            //start timer and make track and start line
             playerStopwatch.Start();
-
             MakeTrack();
             MakeStartLine();
         }
 
         public void MakeStartLine()
         {
+            //make the line about halfway up the road
             startLine[0] = new PointF(roadPoints[300].X, roadPoints[300].Y);
             startLine[1] = new PointF(roadPoints[400].X, roadPoints[400].Y);
             startLine[2] = new PointF(roadPoints[roadPoints.Count - 400].X, roadPoints[roadPoints.Count - 400].Y);
             startLine[3] = new PointF(roadPoints[roadPoints.Count - 300].X, roadPoints[roadPoints.Count - 300].Y);
         }
-
+        /*
         public void MakePowerUps()
         {
             //powerUpCubes.Add(new Rectangle())
         }
-
+        */
         private void nextButton_Click(object sender, EventArgs e)
         {
+            //proceed to main menu
             clickSound.Play();
 
             results.Stop();
@@ -1722,6 +1774,7 @@ namespace Mariokart
 
         private void playButton_Click(object sender, EventArgs e)
         {
+            //proceed to character select screen
             clickSound.Play();
 
             state = "select character";
@@ -1730,10 +1783,12 @@ namespace Mariokart
 
         private void exitButton_Click(object sender, EventArgs e)
         {
+            //close program
             clickSound.Play();
             Application.Exit();
         }
 
+        //the following methods repeat the songs whenever they end so that there is always music playing
         private void mainMenuMedia_MediaEnded(object sender, EventArgs e)
         {
             mainMenu.Stop();
