@@ -80,6 +80,7 @@ namespace Mariokart
         List<Rectangle> npcDrawPosition= new List<Rectangle>();
 
         List<string> leaderboard = new List<string>();
+        List<string> time = new List<string>();
 
         float perspectiveAngle = 0.5f;
 
@@ -587,7 +588,6 @@ namespace Mariokart
                 default: break;
             }
 
-
             if (counter == 0)
             {
                 totalDistance = distanceDriven;
@@ -609,12 +609,17 @@ namespace Mariokart
                 results.Play();
 
                 leaderboard.Add(characterSelected);
+                
+                playerStopwatch.Stop();
+                time.Add(playerStopwatch.Elapsed.ToString(@"m\:ss"));
+                Int64 playerTime = playerStopwatch.ElapsedMilliseconds;
 
                 for (int i = 0; i < npcName.Count; i++)
                 {
                     if (npcName[i] == "done")
                     {
                         npcDistance.RemoveAt(i);
+                        npcSpeed.RemoveAt(i);
                         npcName.RemoveAt(i);
                         i--;
                     }
@@ -622,20 +627,23 @@ namespace Mariokart
                 for (int i = 0; i < npcName.Count; i++)
                 {
                     string fastestNPC = "";
-                    int fastestDistance = 0;
+                    int fastestTime = 0;
                     int rememberJ = 0;
                     for (int j = 0; j < npcDistance.Count; j++)
                     {
-                        if (npcDistance[j] > fastestDistance)
+                        if (Convert.ToInt32(playerTime) + Convert.ToInt32(13500 - npcDistance[j])/npcSpeed[j] > fastestTime)
                         {
-                            fastestDistance = Convert.ToInt32(npcDistance[j]);
+                            fastestTime = Convert.ToInt32(playerTime) + Convert.ToInt32(13500 - npcDistance[j])/npcSpeed[j];
                             fastestNPC = npcName[j];
                             rememberJ = j;
                         }
                     }
                     leaderboard.Add(fastestNPC);
+                    TimeSpan timeSpan = TimeSpan.FromMilliseconds(fastestTime);
+                    time.Add(timeSpan.ToString(@"m\:ss"));
                     npcDistance.RemoveAt(rememberJ); 
                     npcName.RemoveAt(rememberJ);
+                    npcSpeed.RemoveAt(rememberJ);
                     i--;
                 }
 
@@ -703,7 +711,7 @@ namespace Mariokart
 
                     npcX[i] += random;
 
-                    int x = Convert.ToInt32(pointL.X + pointR.X)/2 + npcX[i];//(Convert.ToInt32((pointR.X + pointL.X) / 2) + size/2) - playerWidth / 2;
+                    int x = Convert.ToInt32(pointL.X + pointR.X)/2 + npcX[i];
 
                     Rectangle npcPosition = new Rectangle(x, y, size, size);
                     npcDrawPosition.Add(npcPosition);
@@ -727,9 +735,11 @@ namespace Mariokart
                     npcBaseLineSpeed[i]++;
                 }
 
+                //when npc finishes race mark them as done and record time
                 if (npcDistance[i] > 13500 && npcName[i] != "done")
                 {
                     leaderboard.Add(npcName[i]);
+                    time.Add(playerStopwatch.Elapsed.ToString(@"m\:ss"));
                     npcName[i] = "done";
                 }
             }
@@ -741,12 +751,11 @@ namespace Mariokart
                 {
                     thudSound.Play();
 
-                    if (npcDrawPosition[i].Y < player.Y + playerHeight/2)// && player.X > npcDrawPosition[i].X - npcDrawPosition[i].Width / 2 && player.X < npcDrawPosition[i].X + npcDrawPosition[i].Width * 1.5)
-                    {
+                    if (npcDrawPosition[i].Y < player.Y + playerHeight/2)                    {
                         driveSpeed = 0;
                         distancePerW = 0;
                     }
-                    else if (npcDrawPosition[i].Y > player.Y - playerHeight * 3/2) //&& player.X > npcDrawPosition[i].X - npcDrawPosition[i].Width / 2 && player.X < npcDrawPosition[i].X + npcDrawPosition[i].Width * 1.5)
+                    else if (npcDrawPosition[i].Y > player.Y - playerHeight * 3/2) 
                     {
                         npcSpeed[i] = 0;
                     }
@@ -790,6 +799,7 @@ namespace Mariokart
                 nextButton.Enabled = false;
 
                 leaderboardLabel.Visible = false;
+                timeLabel.Visible = false;
 
                 playButton.Visible = true;
                 playButton.Enabled = true;
@@ -975,6 +985,7 @@ namespace Mariokart
                 titleLabel.Text = "Standings";
 
                 leaderboardLabel.Visible = true;
+                timeLabel.Visible = true;
 
                 e.Graphics.DrawImage(Properties.Resources.MarioKartBackgroundImage, 0, 0, Width, Height);
 
@@ -1014,6 +1025,7 @@ namespace Mariokart
                     }
 
                     leaderboardLabel.Text += $"{position}. {characterName}\n";
+                    timeLabel.Text += $"{time[i]}\n";
                     position++;
                 }
             }
@@ -1719,7 +1731,6 @@ namespace Mariokart
         private void exitButton_Click(object sender, EventArgs e)
         {
             clickSound.Play();
-
             Application.Exit();
         }
 

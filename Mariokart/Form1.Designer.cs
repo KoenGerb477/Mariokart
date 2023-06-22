@@ -45,6 +45,7 @@
             this.playButton = new System.Windows.Forms.Button();
             this.nextButton = new System.Windows.Forms.Button();
             this.leaderboardLabel = new System.Windows.Forms.Label();
+            this.timeLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // gameTimer
@@ -188,7 +189,7 @@
             this.exitButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.exitButton.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.exitButton.Location = new System.Drawing.Point(272, 541);
+            this.exitButton.Location = new System.Drawing.Point(702, 541);
             this.exitButton.Name = "exitButton";
             this.exitButton.Size = new System.Drawing.Size(200, 122);
             this.exitButton.TabIndex = 13;
@@ -203,7 +204,7 @@
             this.playButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.playButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.playButton.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.playButton.Location = new System.Drawing.Point(716, 541);
+            this.playButton.Location = new System.Drawing.Point(334, 541);
             this.playButton.Name = "playButton";
             this.playButton.Size = new System.Drawing.Size(200, 122);
             this.playButton.TabIndex = 14;
@@ -233,9 +234,20 @@
             this.leaderboardLabel.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.leaderboardLabel.Location = new System.Drawing.Point(204, 138);
             this.leaderboardLabel.Name = "leaderboardLabel";
-            this.leaderboardLabel.Size = new System.Drawing.Size(769, 452);
+            this.leaderboardLabel.Size = new System.Drawing.Size(413, 452);
             this.leaderboardLabel.TabIndex = 16;
             this.leaderboardLabel.Visible = false;
+            // 
+            // timeLabel
+            // 
+            this.timeLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.timeLabel.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.timeLabel.Location = new System.Drawing.Point(613, 138);
+            this.timeLabel.Name = "timeLabel";
+            this.timeLabel.Size = new System.Drawing.Size(360, 452);
+            this.timeLabel.TabIndex = 17;
+            this.timeLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.timeLabel.Visible = false;
             // 
             // Form1
             // 
@@ -243,6 +255,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1182, 753);
+            this.Controls.Add(this.timeLabel);
             this.Controls.Add(this.nextButton);
             this.Controls.Add(this.playButton);
             this.Controls.Add(this.exitButton);
@@ -286,6 +299,7 @@
         private System.Windows.Forms.Button playButton;
         private System.Windows.Forms.Button nextButton;
         private System.Windows.Forms.Label leaderboardLabel;
+        private System.Windows.Forms.Label timeLabel;
     }
 }
 
